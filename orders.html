@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Veema Events</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+        }
+        .filter-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .order-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .order-header {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .order-status {
+            padding: 6px 15px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-processing { background: #cce5ff; color: #004085; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .status-shipped { background: #d1ecf1; color: #0c5460; }
+        .product-image-small {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .tracking-progress {
+            height: 8px;
+            border-radius: 4px;
+            background: #e9ecef;
+            margin: 20px 0;
+        }
+        .tracking-progress .progress-bar {
+            background: #28a745;
+            border-radius: 4px;
+        }
+        .summary-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+        .filter-btn {
+            margin: 0 5px;
+            padding: 8px 20px;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+        .filter-btn.active {
+            background: #C6A75E;
+            color: white;
+            border-color: #C6A75E;
+        }
+        .pagination {
+            justify-content: center;
+            margin-top: 40px;
+        }
+        .page-item.active .page-link {
+            background-color: #C6A75E;
+            border-color: #C6A75E;
+        }
+        .page-link {
+            color: #C6A75E;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="navbar"></div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container text-center">
+            <h1 class="fw-bold mb-3">My Orders</h1>
+            <p class="lead mb-0">Track and manage your orders</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- Filters -->
+        <div class="filter-section">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <h5 class="mb-md-0"><i class="bi bi-funnel"></i> Filter Orders</h5>
+                </div>
+                <div class="col-md-8">
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-outline-warning filter-btn active" onclick="filterOrders('all')">All Orders</button>
+                        <button class="btn btn-outline-warning filter-btn" onclick="filterOrders('pending')">Pending</button>
+                        <button class="btn btn-outline-warning filter-btn" onclick="filterOrders('processing')">Processing</button>
+                        <button class="btn btn-outline-warning filter-btn" onclick="filterOrders('shipped')">Shipped</button>
+                        <button class="btn btn-outline-warning filter-btn" onclick="filterOrders('delivered')">Delivered</button>
+                        <button class="btn btn-outline-warning filter-btn" onclick="filterOrders('cancelled')">Cancelled</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Grid -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div id="ordersContainer">
+                    <!-- Orders will be loaded here -->
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-warning" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Sidebar Summary -->
+            <div class="col-lg-4">
+                <div class="summary-card">
+                    <h5 class="fw-bold mb-4">Order Summary</h5>
+                    
+                    <div class="mb-4">
+                        <p class="mb-2">Total Orders: <span class="fw-bold" id="totalOrders">0</span></p>
+                        <p class="mb-2">Completed: <span class="fw-bold text-success" id="completedOrders">0</span></p>
+                        <p class="mb-2">Processing: <span class="fw-bold text-warning" id="processingOrders">0</span></p>
+                        <p class="mb-2">Total Spent: <span class="fw-bold" id="totalSpent">Ksh 0</span></p>
+                    </div>
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <label class="form-label">Track Order</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Enter Order #">
+                            <button class="btn btn-warning">Track</button>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h6>Need Help?</h6>
+                    <p class="small text-muted">Contact our support team for order assistance</p>
+                    <a href="contact.html" class="btn btn-outline-warning w-100">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="orderModalBody">
+                    <!-- Order details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning" onclick="printOrder()">Print Invoice</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/api.js"></script>
+    
+    <script>
+        let allOrders = [];
+        let currentFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!API.isAuthenticated()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            loadOrders();
+            loadNavbar();
+            loadFooter();
+        });
+
+        async function loadOrders() {
+            const container = document.getElementById('ordersContainer');
+            
+            try {
+                // TODO: Replace with actual API call
+                // const response = await API.getUserOrders();
+                // allOrders = response.orders;
+                
+                // Sample orders data
+                allOrders = [
+                    {
+                        id: 'ORD-20240306-001',
+                        date: '2024-03-06',
+                        total: 3500,
+                        status: 'delivered',
+                        tracking: 'TRK123456789',
+                        paymentMethod: 'M-Pesa',
+                        paymentRef: 'MPESA12345',
+                        items: [
+                            { id: 1, name: 'Luxury Table Cloth - Gold', quantity: 1, price: 3500, image: '/assets/images/tablecloth-gold.jpg' }
+                        ],
+                        shippingAddress: '123 Kenyatta Avenue, Nairobi',
+                        estimatedDelivery: '2024-03-10'
+                    },
+                    {
+                        id: 'ORD-20240305-002',
+                        date: '2024-03-05',
+                        total: 1200,
+                        status: 'shipped',
+                        tracking: 'TRK987654321',
+                        paymentMethod: 'M-Pesa',
+                        paymentRef: 'MPESA67890',
+                        items: [
+                            { id: 7, name: 'Sequin Table Runner - Silver', quantity: 1, price: 1200, image: '/assets/images/runner-sequin.jpg' }
+                        ],
+                        shippingAddress: '456 Moi Avenue, Mombasa',
+                        estimatedDelivery: '2024-03-09'
+                    },
+                    {
+                        id: 'ORD-20240304-003',
+                        date: '2024-03-04',
+                        total: 495,
+                        status: 'processing',
+                        items: [
+                            { id: 10, name: 'Seat Spandex Cover (Light)', quantity: 2, price: 245, image: '/assets/images/spandex-cover.jpeg' },
+                            { id: 13, name: 'Tie Backs', quantity: 1, price: 5, image: '/assets/images/tie-backs.jpeg' }
+                        ],
+                        shippingAddress: '789 Kenyatta Highway, Kisumu',
+                        estimatedDelivery: '2024-03-12'
+                    },
+                    {
+                        id: 'ORD-20240303-004',
+                        date: '2024-03-03',
+                        total: 130,
+                        status: 'pending',
+                        items: [
+                            { id: 16, name: 'Butterfly Gold Napkin Ring', quantity: 1, price: 130, image: '/assets/images/napring-butterfly.jpeg' }
+                        ],
+                        shippingAddress: '321 Kenyatta Drive, Nakuru',
+                        estimatedDelivery: '2024-03-15'
+                    },
+                    {
+                        id: 'ORD-20240302-005',
+                        date: '2024-03-02',
+                        total: 5000,
+                        status: 'cancelled',
+                        items: [
+                            { id: 17, name: 'Acrylic Gold Stand', quantity: 1, price: 5000, image: '/assets/images/acrylic-stand.jpeg' }
+                        ],
+                        shippingAddress: '654 Kenyatta Road, Eldoret',
+                        cancellationReason: 'Out of stock'
+                    }
+                ];
+
+                displayOrders(allOrders);
+                updateSummary();
+                
+            } catch (error) {
+                container.innerHTML = '<div class="alert alert-danger">Failed to load orders</div>';
+            }
+        }
+
+        function displayOrders(orders) {
+            const container = document.getElementById('ordersContainer');
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-box" style="font-size: 4rem; color: #ccc;"></i>
+                        <h4 class="mt-3">No orders found</h4>
+                        <p>Start shopping to see your orders here</p>
+                        <a href="products.html" class="btn btn-warning">Shop Now</a>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            orders.forEach(order => {
+                const statusClass = `status-${order.status}`;
+                const progressWidth = getProgressWidth(order.status);
+                
+                html += `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <h6 class="fw-bold mb-1">Order #${order.id}</h6>
+                                    <small class="text-muted">Placed on ${order.date}</small>
+                                </div>
+                                <div class="col-md-4 text-md-center">
+                                    <span class="order-status ${statusClass}">${order.status.toUpperCase()}</span>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                    <h5 class="fw-bold text-warning mb-0">Ksh ${order.total.toLocaleString()}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="order-items mb-3">
+                            ${order.items.map(item => `
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="${item.image}" class="product-image-small me-3" alt="${item.name}">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-0">${item.name}</h6>
+                                        <small class="text-muted">Qty: ${item.quantity}</small>
+                                    </div>
+                                    <span class="fw-bold">Ksh ${(item.price * item.quantity).toLocaleString()}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        ${order.tracking ? `
+                            <div class="tracking-progress">
+                                <div class="progress-bar" style="width: ${progressWidth}%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between small mb-3">
+                                <span>Order Placed</span>
+                                <span>Processed</span>
+                                <span>Shipped</span>
+                                <span>Delivered</span>
+                            </div>
+                            <p class="mb-0"><i class="bi bi-truck"></i> Tracking: ${order.tracking}</p>
+                        ` : ''}
+
+                        <hr class="my-3">
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <button class="btn btn-sm btn-outline-warning" onclick="viewOrderDetails('${order.id}')">
+                                <i class="bi bi-eye"></i> View Details
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="trackOrder('${order.id}')">
+                                <i class="bi bi-truck"></i> Track
+                            </button>
+                            ${order.status === 'delivered' ? `
+                                <button class="btn btn-sm btn-outline-success" onclick="reorder('${order.id}')">
+                                    <i class="bi bi-arrow-repeat"></i> Reorder
+                                </button>
+                            ` : ''}
+                            ${order.status === 'pending' ? `
+                                <button class="btn btn-sm btn-outline-danger" onclick="cancelOrder('${order.id}')">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function getProgressWidth(status) {
+            switch(status) {
+                case 'pending': return 25;
+                case 'processing': return 50;
+                case 'shipped': return 75;
+                case 'delivered': return 100;
+                default: return 0;
+            }
+        }
+
+        function updateSummary() {
+            const totalOrders = allOrders.length;
+            const completed = allOrders.filter(o => o.status === 'delivered').length;
+            const processing = allOrders.filter(o => ['pending', 'processing', 'shipped'].includes(o.status)).length;
+            const totalSpent = allOrders.reduce((sum, o) => sum + o.total, 0);
+            
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('completedOrders').textContent = completed;
+            document.getElementById('processingOrders').textContent = processing;
+            document.getElementById('totalSpent').textContent = `Ksh ${totalSpent.toLocaleString()}`;
+        }
+
+        function filterOrders(status) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            currentFilter = status;
+            
+            if (status === 'all') {
+                displayOrders(allOrders);
+            } else {
+                const filtered = allOrders.filter(o => o.status === status);
+                displayOrders(filtered);
+            }
+        }
+
+        function viewOrderDetails(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            const modalBody = document.getElementById('orderModalBody');
+            
+            modalBody.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Order Information</h6>
+                        <p><strong>Order ID:</strong> ${order.id}</p>
+                        <p><strong>Date:</strong> ${order.date}</p>
+                        <p><strong>Status:</strong> <span class="badge bg-warning">${order.status}</span></p>
+                        <p><strong>Payment Method:</strong> ${order.paymentMethod || 'N/A'}</p>
+                        <p><strong>Payment Ref:</strong> ${order.paymentRef || 'N/A'}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Shipping Information</h6>
+                        <p><strong>Address:</strong> ${order.shippingAddress}</p>
+                        <p><strong>Estimated Delivery:</strong> ${order.estimatedDelivery || 'N/A'}</p>
+                        ${order.tracking ? `<p><strong>Tracking:</strong> ${order.tracking}</p>` : ''}
+                        ${order.cancellationReason ? `<p><strong>Cancellation Reason:</strong> ${order.cancellationReason}</p>` : ''}
+                    </div>
+                </div>
+                <hr>
+                <h6>Order Items</h6>
+                ${order.items.map(item => `
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>${item.name} x${item.quantity}</span>
+                        <span>Ksh ${(item.price * item.quantity).toLocaleString()}</span>
+                    </div>
+                `).join('')}
+                <hr>
+                <div class="d-flex justify-content-between fw-bold">
+                    <span>Total</span>
+                    <span>Ksh ${order.total.toLocaleString()}</span>
+                </div>
+            `;
+            
+            new bootstrap.Modal(document.getElementById('orderModal')).show();
+        }
+
+        function trackOrder(orderId) {
+            alert(`Tracking order ${orderId}`);
+        }
+
+        function reorder(orderId) {
+            alert(`Reorder functionality for order ${orderId}`);
+        }
+
+        function cancelOrder(orderId) {
+            if (confirm('Are you sure you want to cancel this order?')) {
+                alert(`Order ${orderId} cancelled`);
+            }
+        }
+
+        function printOrder() {
+            window.print();
+        }
+
+        function loadNavbar() {
+            fetch('navbar.html')
+                .then(r => r.text())
+                .then(d => document.getElementById('navbar').innerHTML = d)
+                .catch(e => console.log('Navbar error:', e));
+        }
+
+        function loadFooter() {
+            fetch('footer.html')
+                .then(r => r.text())
+                .then(d => document.getElementById('footer').innerHTML = d)
+                .catch(e => console.log('Footer error:', e));
+        }
+    </script>
+</body>
+</html>
