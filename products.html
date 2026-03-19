@@ -8,41 +8,223 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* FORCE ALL IMAGES TO BE VISIBLE FOR DEBUGGING */
-        img {
-            opacity: 1 !important;
-            visibility: visible !important;
-            display: block !important;
-            min-width: 100px !important;
-            min-height: 100px !important;
-            background-color: #ff0000 !important;
-            border: 5px solid #00ff00 !important;
+        body {
+            background-color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333333;
         }
-        
-        /* Make product images extra obvious */
+        .page-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 40px 0;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .page-header h1 {
+            color: #333333;
+            font-weight: 700;
+        }
+        .page-header p {
+            color: #666666;
+        }
+        .product-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            background: white;
+            height: 100%;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #C6A75E;
+        }
         .product-image {
-            border: 5px solid blue !important;
-            background-color: yellow !important;
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #f5f5f5;
+        }
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 8px;
+            min-height: 50px;
+        }
+        .product-price {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #000000;
+            margin-bottom: 15px;
+        }
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #C6A75E;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+        .category-btn {
+            margin: 5px;
+            padding: 8px 20px;
+            border: 2px solid #C6A75E;
+            background: white;
+            color: #C6A75E;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .category-btn:hover, .category-btn.active {
+            background: #C6A75E;
+            color: white;
+        }
+        .stock-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+        .stock-badge.in-stock {
+            background: #28a745;
+            color: white;
+        }
+        .stock-badge.low-stock {
+            background: #ffc107;
+            color: #333;
+        }
+        .stock-badge.out-of-stock {
+            background: #dc3545;
+            color: white;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            max-width: 140px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            background: #f8f9fa;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #333;
+        }
+        .quantity-btn:hover {
+            background: #C6A75E;
+            color: white;
+        }
+        .quantity-input {
+            width: 60px;
+            height: 40px;
+            border: none;
+            text-align: center;
+            font-weight: 600;
+            border-left: 1px solid #e0e0e0;
+            border-right: 1px solid #e0e0e0;
+            color: #333;
+            -moz-appearance: textfield;
+        }
+        .quantity-input::-webkit-outer-spin-button,
+        .quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .quantity-input:focus {
+            outline: none;
+            background-color: #fff9e6;
+        }
+        .add-to-cart-btn {
+            background: #333333;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        .add-to-cart-btn:hover {
+            background: #C6A75E;
+        }
+        .search-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            padding-left: 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 40px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+            color: #333;
+        }
+        .search-box input:focus {
+            border-color: #C6A75E;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(198,167,94,0.1);
+        }
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 1.2rem;
+        }
+        .featured-section {
+            background: #f8f9fa;
+            padding: 40px 0;
+            margin: 40px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .featured-title {
+            color: #C6A75E;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        .product-count {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        .no-products {
+            text-align: center;
+            padding: 60px;
+            color: #999;
         }
     </style>
 </head>
 <body>
-
-<div style="background: yellow; padding: 20px; margin: 20px; text-align: center;">
-    <h3>🔍 IMAGE TEST</h3>
-    <img src="/assets/images/tablecloth-gold.jpg" style="max-width: 200px; border: 3px solid red;">
-    <p>Path: /assets/images/tablecloth-gold.jpg</p>
-    <p>If you see the image above, the path is correct and images work!</p>
-</div>
-
-<div style="background: blue; padding: 20px; margin: 20px; color: white; text-align: center;">
-    <h3>🔍 DIRECT IMAGE TEST</h3>
-    <img src="/assets/images/tablecloth-gold.jpg" 
-         style="max-width: 200px; border: 5px solid limegreen; display: block; margin: 0 auto;"
-         onload="console.log('✅ IMAGE LOADED SUCCESSFULLY')"
-         onerror="console.log('❌ IMAGE FAILED TO LOAD')">
-    <p>If you see a green border but no image, the image is loaded but invisible due to CSS</p>
-</div>
 
     <div id="navbar"></div>
 
@@ -105,11 +287,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-// ============================================
-// HARDCODED BASE PATH FOR NETLIFY
-// ============================================
-const basePath = '/assets/images/';
-console.log('Using basePath:', basePath);
+        // ============================================
+        // PRODUCT DATA - NETLIFY VERSION
+        // ============================================
+        
+        // Correct path for Netlify
+        const basePath = '/assets/images/';
         
         const products = [
             {
@@ -316,8 +499,7 @@ console.log('Using basePath:', basePath);
                         <div class="product-card">
                             ${product.featured ? '<span class="featured-badge"><i class="bi bi-star-fill me-1"></i>Featured</span>' : ''}
                             <span class="stock-badge ${stockClass}">${stockText}</span>
-                            <img src="${product.image}" class="product-image" alt="${product.name}"
-                                 onerror="console.error('Image failed to load:', this.src); this.src='${basePath}placeholder.jpg'">
+                            <img src="${product.image}" class="product-image" alt="${product.name}">
                             <h5 class="product-name">${product.name}</h5>
                             <p class="text-muted small mb-2">${product.description}</p>
                             <div class="product-price">Ksh ${product.price.toLocaleString()}</div>
@@ -391,7 +573,6 @@ console.log('Using basePath:', basePath);
             input.value = newQty;
             quantities[productId] = newQty;
             
-            // Also update featured if exists
             const featuredInput = document.getElementById(`featured-qty-${productId}`);
             if (featuredInput) featuredInput.value = newQty;
         }
@@ -423,7 +604,6 @@ console.log('Using basePath:', basePath);
             
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             
-            // Check if product already in cart
             const existingItemIndex = cart.findIndex(item => item.id === productId);
             
             if (existingItemIndex !== -1) {
@@ -443,7 +623,6 @@ console.log('Using basePath:', basePath);
             alert(`${quantity} × ${product.name} added to cart!`);
             updateCartCount();
             
-            // Reset quantity to 1
             quantities[productId] = 1;
             const input = document.getElementById(`qty-${productId}`);
             if (input) input.value = 1;
