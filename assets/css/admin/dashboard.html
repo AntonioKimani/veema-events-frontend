@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Veema Household</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Admin CSS -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 260px;
+            background: linear-gradient(135deg, #2c3e50 0%, #1e2b37 100%);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #C6A75E;
+        }
+
+        .sidebar-header p {
+            margin: 5px 0 0;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu a i {
+            width: 25px;
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: #C6A75E;
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(198, 167, 94, 0.2);
+            color: white;
+            border-left-color: #C6A75E;
+        }
+
+        .sidebar-menu a.logout {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .page-title p {
+            margin: 5px 0 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info .notification {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-info .notification i {
+            font-size: 1.3rem;
+            color: #7f8c8d;
+        }
+
+        .user-info .notification .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #C6A75E;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-info .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-info .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info .profile .details h6 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .user-info .profile .details small {
+            color: #7f8c8d;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .stat-icon.primary {
+            background: rgba(198, 167, 94, 0.1);
+            color: #C6A75E;
+        }
+
+        .stat-icon.success {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+
+        .stat-icon.info {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .stat-icon.warning {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+        }
+
+        .stat-info h3 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-info p {
+            margin: 5px 0 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .stat-change {
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+
+        .stat-change.positive {
+            color: #2ecc71;
+        }
+
+        .stat-change.negative {
+            color: #e74c3c;
+        }
+
+        /* Chart Card */
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-header h5 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .chart-actions select {
+            border: 1px solid #e0e0e0;
+            padding: 5px 15px;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        /* Table Styles */
+        .table-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-header h5 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .table-header .btn {
+            padding: 8px 20px;
+            border-radius: 8px;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-badge.completed {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+
+        .status-badge.pending {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+        }
+
+        .status-badge.processing {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .status-badge.cancelled {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -260px;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* Chart Container */
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Veema Household</h3>
+            <p>Admin Dashboard</p>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="active">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="products.html">
+                <i class="bi bi-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="orders.html">
+                <i class="bi bi-cart"></i>
+                <span>Orders</span>
+            </a>
+            <a href="customers.html">
+                <i class="bi bi-people"></i>
+                <span>Customers</span>
+            </a>
+            <a href="reports.html">
+                <i class="bi bi-graph-up"></i>
+                <span>Reports</span>
+            </a>
+            <a href="settings.html">
+                <i class="bi bi-gear"></i>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="logout" onclick="handleLogout()">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="page-title">
+                <h2>Dashboard</h2>
+                <p>Welcome back, Admin! Here's what's happening today.</p>
+            </div>
+            <div class="user-info">
+                <div class="notification">
+                    <i class="bi bi-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="profile" onclick="toggleProfileMenu()">
+                    <img src="../assets/images/admin-avatar.jpg" alt="Profile" onerror="this.src='https://via.placeholder.com/40'">
+                    <div class="details">
+                        <h6 id="adminName">Admin User</h6>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="bi bi-box"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalProducts">0</h3>
+                        <p>Total Products</p>
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="bi bi-arrow-up"></i> 12% from last month
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="bi bi-cart-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalOrders">0</h3>
+                        <p>Total Orders</p>
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="bi bi-arrow-up"></i> 8% from last month
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card">
+                    <div class="stat-icon info">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalRevenue">Ksh 0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="bi bi-arrow-up"></i> 23% from last month
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6">
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalCustomers">0</h3>
+                        <p>Total Customers</p>
+                    </div>
+                    <div class="stat-change positive">
+                        <i class="bi bi-arrow-up"></i> 5% from last month
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h5>Sales Overview</h5>
+                        <div class="chart-actions">
+                            <select id="salesPeriod">
+                                <option value="week">This Week</option>
+                                <option value="month" selected>This Month</option>
+                                <option value="year">This Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <div class="text-center">
+                                <i class="bi bi-bar-chart-line fs-1 mb-3"></i>
+                                <p>Chart will be displayed here</p>
+                                <small class="text-muted">Connect to backend for real data</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-4">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h5>Top Categories</h5>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <div class="text-center">
+                                <i class="bi bi-pie-chart fs-1 mb-3"></i>
+                                <p>Category distribution</p>
+                                <small class="text-muted">Loading data...</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="table-card mt-4">
+            <div class="table-header">
+                <h5>Recent Orders</h5>
+                <a href="orders.html" class="btn btn-outline-primary btn-sm">
+                    View All <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentOrdersTable">
+                        <tr>
+                            <td colspan="8" class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Low Stock Alert -->
+        <div class="table-card mt-4">
+            <div class="table-header">
+                <h5>Low Stock Alert</h5>
+                <button class="btn btn-warning btn-sm" onclick="restockAll()">
+                    <i class="bi bi-exclamation-triangle"></i> Restock All
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Current Stock</th>
+                            <th>Status</th>
+                            <th>Last Restocked</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lowStockTable">
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <div class="spinner-border text-warning" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Menu Dropdown (Hidden by default) -->
+    <div id="profileMenu" style="display: none; position: absolute; top: 70px; right: 30px; background: white; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); z-index: 1000;">
+        <div class="p-3">
+            <a href="profile.html" class="d-block p-2 text-decoration-none text-dark">My Profile</a>
+            <a href="settings.html" class="d-block p-2 text-decoration-none text-dark">Settings</a>
+            <hr class="my-2">
+            <a href="#" onclick="handleLogout()" class="d-block p-2 text-decoration-none text-danger">Logout</a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/api.js"></script>
+    
+    <script>
+        // Check authentication and admin status
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check if user is logged in
+            if (!API.isAuthenticated()) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            // Check if user is admin
+            const user = API.getCurrentUser();
+            if (!user || user.role !== 'admin') {
+                alert('Access denied. Admin only.');
+                window.location.href = '../index.html';
+                return;
+            }
+            
+            // Display admin name
+            document.getElementById('adminName').textContent = user.name || 'Admin User';
+            
+            // Load dashboard data
+            await loadDashboardData();
+        });
+        
+        // Load all dashboard data
+        async function loadDashboardData() {
+            try {
+                // Load products
+                const products = await API.adminGetAllProducts();
+                document.getElementById('totalProducts').textContent = products.length || 0;
+                
+                // Load low stock products
+                const lowStock = products.filter(p => p.stock < 10);
+                displayLowStockProducts(lowStock);
+                
+                // Load recent orders (demo data for now)
+                displayRecentOrders();
+                
+                // Load stats (demo data)
+                document.getElementById('totalOrders').textContent = '156';
+                document.getElementById('totalRevenue').textContent = 'Ksh 1,245,000';
+                document.getElementById('totalCustomers').textContent = '89';
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                // Show fallback data
+                showFallbackData();
+            }
+        }
+        
+        // Display low stock products
+        function displayLowStockProducts(products) {
+            const tbody = document.getElementById('lowStockTable');
+            
+            if (products.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-success">
+                            <i class="bi bi-check-circle"></i> All products are well stocked!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="${p.image_url || '../assets/images/placeholder.jpg'}" 
+                                 style="width: 40px; height: 40px; object-fit: cover; border-radius: 5px; margin-right: 10px;">
+                            <div>
+                                <strong>${p.name}</strong>
+                                <br>
+                                <small class="text-muted">SKU: ${p.id}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${p.category || 'Uncategorized'}</td>
+                    <td>
+                        <span class="badge bg-danger">${p.stock}</span>
+                    </td>
+                    <td>
+                        <span class="status-badge pending">Low Stock</span>
+                    </td>
+                    <td>${p.lastRestocked || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning action-btn" onclick="restockProduct(${p.id})">
+                            <i class="bi bi-plus-circle"></i> Restock
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Display recent orders
+        function displayRecentOrders() {
+            const tbody = document.getElementById('recentOrdersTable');
+            
+            // Demo data - replace with actual API call
+            const orders = [
+                { id: 'ORD-001', customer: 'Sarah Johnson', date: '2024-03-06', items: 3, total: 5500, status: 'completed', payment: 'paid' },
+                { id: 'ORD-002', customer: 'Mike Wanjala', date: '2024-03-06', items: 2, total: 4300, status: 'processing', payment: 'pending' },
+                { id: 'ORD-003', customer: 'Angela Mwende', date: '2024-03-05', items: 1, total: 3500, status: 'completed', payment: 'paid' },
+                { id: 'ORD-004', customer: 'David Omondi', date: '2024-03-05', items: 4, total: 8200, status: 'pending', payment: 'pending' },
+                { id: 'ORD-005', customer: 'Grace Wambui', date: '2024-03-04', items: 2, total: 1600, status: 'cancelled', payment: 'failed' }
+            ];
+            
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td><strong>${order.id}</strong></td>
+                    <td>${order.customer}</td>
+                    <td>${order.date}</td>
+                    <td>${order.items} items</td>
+                    <td>Ksh ${order.total.toLocaleString()}</td>
+                    <td>
+                        <span class="status-badge ${order.status}">${order.status}</span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${order.payment === 'paid' ? 'completed' : 'pending'}">${order.payment}</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary action-btn" onclick="viewOrder('${order.id}')">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-success action-btn" onclick="updateOrder('${order.id}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Show fallback data if API fails
+        function showFallbackData() {
+            document.getElementById('totalProducts').textContent = '24';
+            document.getElementById('totalOrders').textContent = '156';
+            document.getElementById('totalRevenue').textContent = 'Ksh 1,245,000';
+            document.getElementById('totalCustomers').textContent = '89';
+            
+            // Show fallback low stock
+            displayLowStockProducts([
+                { id: 1, name: 'Luxury Table Cloth', category: 'Table Linens', stock: 5, image_url: null },
+                { id: 2, name: 'Gold Charger Plate', category: 'Tableware', stock: 3, image_url: null },
+                { id: 3, name: 'Crystal Centerpiece', category: 'Decor', stock: 2, image_url: null }
+            ]);
+            
+            displayRecentOrders();
+        }
+        
+        // Toggle profile menu
+        function toggleProfileMenu() {
+            const menu = document.getElementById('profileMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        // Handle logout
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                API.logout();
+            }
+        }
+        
+        // Action functions
+        function viewOrder(orderId) {
+            alert(`Viewing order ${orderId} - This would open order details`);
+        }
+        
+        function updateOrder(orderId) {
+            alert(`Updating order ${orderId} - This would open edit form`);
+        }
+        
+        function restockProduct(productId) {
+            const quantity = prompt('Enter quantity to restock:', '10');
+            if (quantity && !isNaN(quantity) && quantity > 0) {
+                alert(`Restocking product ${productId} with ${quantity} units. This would update database.`);
+                // Reload data
+                loadDashboardData();
+            }
+        }
+        
+        function restockAll() {
+            if (confirm('Restock all low stock items?')) {
+                alert('Restocking all items. This would update database.');
+                loadDashboardData();
+            }
+        }
+        
+        // Close profile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const profile = document.querySelector('.profile');
+            const menu = document.getElementById('profileMenu');
+            
+            if (!profile.contains(event.target) && menu.style.display === 'block') {
+                menu.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

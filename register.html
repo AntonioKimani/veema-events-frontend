@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Veema Events</title>
+    <script src="env-config.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .register-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .register-header {
+            background: #C6A75E;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .register-header h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+        .register-body {
+            padding: 40px;
+            background: white;
+        }
+        .form-control {
+            height: 50px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            padding: 10px 15px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .form-control:focus {
+            border-color: #C6A75E;
+            box-shadow: none;
+        }
+        .btn-register {
+            background: #C6A75E;
+            color: white;
+            height: 50px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-register:hover {
+            background: #b8954f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(198, 167, 94, 0.3);
+        }
+        .btn-google {
+            background: white;
+            color: #757575;
+            border: 2px solid #ddd;
+            height: 50px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-google:hover {
+            background: #f8f9fa;
+            border-color: #C6A75E;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .btn-google i {
+            color: #4285f4;
+            font-size: 1.3rem;
+        }
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+        .divider span {
+            background: white;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+            color: #999;
+        }
+        .alert {
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .login-link a {
+            color: #C6A75E;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .spinner-border {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .password-requirements {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="navbar"></div>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="register-card">
+                    <div class="register-header">
+                        <h2><i class="bi bi-calendar-event"></i> Veema Events</h2>
+                        <p class="mb-0">Create your account to get started</p>
+                    </div>
+                    
+                    <div class="register-body">
+                        <!-- Error Message Display -->
+                        <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+                        
+                        <!-- Success Message Display -->
+                        <div id="successMessage" class="alert alert-success" style="display: none;"></div>
+
+                        <!-- Registration Form -->
+                        <form id="registerForm">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Full Name</label>
+                                <input type="text" class="form-control" id="name" 
+                                       placeholder="Enter your full name" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Email Address</label>
+                                <input type="email" class="form-control" id="email" 
+                                       placeholder="Enter your email" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" 
+                                       placeholder="07XXXXXXXX" pattern="[0-9]{10}">
+                                <small class="text-muted">Optional: Format: 07XXXXXXXX</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Password</label>
+                                <input type="password" class="form-control" id="password" 
+                                       placeholder="Create a password" required minlength="6">
+                                <div class="password-requirements">
+                                    <i class="bi bi-info-circle"></i> Must be at least 6 characters
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Confirm Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" 
+                                       placeholder="Confirm your password" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-register w-100" id="registerBtn">
+                                <span id="registerText">Create Account</span>
+                                <span id="registerSpinner" style="display: none;">
+                                    <span class="spinner-border spinner-border-sm"></span> Creating account...
+                                </span>
+                            </button>
+                        </form>
+
+                        <!-- Divider -->
+                        <div class="divider">
+                            <span>OR</span>
+                        </div>
+
+                        <!-- Google Login Button - UPDATE THIS URL AFTER DEPLOYMENT -->
+                        <a href="${window.ENV?.BACKEND_URL || 'http://localhost:5000'}/api/auth/google" class="btn-google w-100">
+                           <i class="bi bi-google"></i>
+                            Sign in with Google
+                        </a>
+
+                        <!-- Login Link -->
+                        <div class="login-link">
+                            <p class="mb-0">Already have an account? <a href="login.html">Sign in</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ============================================
+        // AFTER DEPLOYMENT, REPLACE WITH YOUR LIVE BACKEND URL
+        // ============================================
+        const API_BASE_URL = 'https://YOUR_BACKEND_URL.onrender.com/api';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                window.location.href = 'index.html';
+            }
+            loadNavbar();
+            loadFooter();
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!name || !email || !password || !confirmPassword) {
+                showError('Please fill in all required fields');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Please enter a valid email address');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+            
+            if (phone && !/^[0-9]{10}$/.test(phone)) {
+                showError('Phone number must be 10 digits');
+                return;
+            }
+            
+            setLoading(true);
+            hideError();
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password, phone })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    showSuccess('Registration successful! Redirecting...');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showError(data.message || 'Registration failed. Please try again.');
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError('Connection error. Please try again.');
+                setLoading(false);
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => hideError(), 5000);
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function setLoading(isLoading) {
+            const registerText = document.getElementById('registerText');
+            const registerSpinner = document.getElementById('registerSpinner');
+            const registerBtn = document.getElementById('registerBtn');
+            
+            if (isLoading) {
+                registerText.style.display = 'none';
+                registerSpinner.style.display = 'inline-block';
+                registerBtn.disabled = true;
+            } else {
+                registerText.style.display = 'inline';
+                registerSpinner.style.display = 'none';
+                registerBtn.disabled = false;
+            }
+        }
+
+        function loadNavbar() {
+            fetch('navbar.html')
+                .then(r => r.text())
+                .then(d => document.getElementById('navbar').innerHTML = d)
+                .catch(e => console.log('Navbar error:', e));
+        }
+
+        function loadFooter() {
+            fetch('footer.html')
+                .then(r => r.text())
+                .then(d => document.getElementById('footer').innerHTML = d)
+                .catch(e => console.log('Footer error:', e));
+        }
+    </script>
+</body>
+</html>

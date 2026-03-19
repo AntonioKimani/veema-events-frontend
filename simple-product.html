@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Product View</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        img { max-width: 400px; border: 2px solid #333; }
+    </style>
+</head>
+<body>
+    <h1>Simple Product Test</h1>
+    
+    <!-- Test image directly -->
+    <h3>Test 1: Direct image tag</h3>
+    <img src="/Veema%20Household%20frontend/assets/images/tablecloth-gold.jpg">
+    
+    <!-- Test with JavaScript -->
+    <h3>Test 2: JavaScript loaded image</h3>
+    <div id="image-container"></div>
+    
+    <script>
+        // Simple test
+        document.getElementById('image-container').innerHTML = 
+            '<img src="/Veema%20Household%20frontend/assets/images/tablecloth-gold.jpg">';
+            
+        console.log('Page loaded');
+    </script>
+</body>
+</html>

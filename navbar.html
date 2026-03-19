@@ -1,0 +1,115 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">
+            <i class="bi bi-calendar-event"></i> VEEMA EVENTS
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-house-door-fill"></i> Home
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="products.html">Products</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link position-relative" href="cart.html">
+                        <i class="bi bi-bag-fill fs-5"></i>
+                        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            0
+                        </span>
+                    </a>
+                </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <img id="userAvatar" src="assets/images/default-avatar.png" class="rounded-circle me-1" style="width: 30px; height: 30px; object-fit: cover;" onerror="this.src='assets/images/default-avatar.png'">
+                        <span id="userName">Account</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile.html" id="profileLink">My Profile</a></li>
+                        <li><a class="dropdown-item" href="orders.html" id="ordersLink">My Orders</a></li>
+                        <li><hr class="dropdown-divider" id="logoutDivider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutLink" onclick="handleLogout()">Logout</a></li>
+                        <li><a class="dropdown-item" href="login.html" id="loginLink">Login</a></li>
+                        <li><a class="dropdown-item" href="register.html" id="registerLink">Register</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // ============================================
+    // AFTER DEPLOYMENT, REPLACE WITH YOUR LIVE BACKEND URL
+    // ============================================
+    const BACKEND_URL = 'https://YOUR_BACKEND_URL.onrender.com';
+    
+    function updateNavbar() {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        const loginLink = document.getElementById('loginLink');
+        const registerLink = document.getElementById('registerLink');
+        const logoutLink = document.getElementById('logoutLink');
+        const profileLink = document.getElementById('profileLink');
+        const ordersLink = document.getElementById('ordersLink');
+        const logoutDivider = document.getElementById('logoutDivider');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        
+        if (token && user && user.name) {
+            loginLink.style.display = 'none';
+            registerLink.style.display = 'none';
+            logoutLink.style.display = 'block';
+            profileLink.style.display = 'block';
+            ordersLink.style.display = 'block';
+            logoutDivider.style.display = 'block';
+            
+            userName.textContent = user.name.split(' ')[0];
+            if (user.avatar) {
+                userAvatar.src = user.avatar;
+            }
+        } else {
+            loginLink.style.display = 'block';
+            registerLink.style.display = 'block';
+            logoutLink.style.display = 'none';
+            profileLink.style.display = 'none';
+            ordersLink.style.display = 'none';
+            logoutDivider.style.display = 'none';
+            
+            userName.textContent = 'Account';
+            userAvatar.src = 'assets/images/default-avatar.png';
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', updateNavbar);
+    
+    function handleLogout() {
+    const backendUrl = window.ENV?.BACKEND_URL || 'http://localhost:5000';
+    fetch(`${backendUrl}/api/auth/logout`, {
+        credentials: 'include'
+    }).finally(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = 'index.html';
+    });
+}
+</script>

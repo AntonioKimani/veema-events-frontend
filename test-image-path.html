@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Image Paths</title>
+    <style>
+        .test-container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        .test-image {
+            max-width: 300px;
+            max-height: 200px;
+            border: 2px solid #333;
+            margin: 10px;
+        }
+        .success { color: green; font-weight: bold; }
+        .fail { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Test Different Image Paths</h1>
+    
+    <div class="test-container">
+        <h3>Test 1: assets/images/tablecloth-gold.jpg</h3>
+        <img class="test-image" src="assets/images/tablecloth-gold.jpg" 
+             onload="this.nextElementSibling.innerHTML='✅ SUCCESS'" 
+             onerror="this.nextElementSibling.innerHTML='❌ FAILED'">
+        <div class="fail"></div>
+    </div>
+
+    <div class="test-container">
+        <h3>Test 2: ./assets/images/tablecloth-gold.jpg</h3>
+        <img class="test-image" src="./assets/images/tablecloth-gold.jpg" 
+             onload="this.nextElementSibling.innerHTML='✅ SUCCESS'" 
+             onerror="this.nextElementSibling.innerHTML='❌ FAILED'">
+        <div class="fail"></div>
+    </div>
+
+    <div class="test-container">
+        <h3>Test 3: /assets/images/tablecloth-gold.jpg</h3>
+        <img class="test-image" src="/assets/images/tablecloth-gold.jpg" 
+             onload="this.nextElementSibling.innerHTML='✅ SUCCESS'" 
+             onerror="this.nextElementSibling.innerHTML='❌ FAILED'">
+        <div class="fail"></div>
+    </div>
+
+    <div class="test-container">
+        <h3>Test 4: ../assets/images/tablecloth-gold.jpg</h3>
+        <img class="test-image" src="../assets/images/tablecloth-gold.jpg" 
+             onload="this.nextElementSibling.innerHTML='✅ SUCCESS'" 
+             onerror="this.nextElementSibling.innerHTML='❌ FAILED'">
+        <div class="fail"></div>
+    </div>
+
+    <div class="test-container">
+        <h3>Test 5: ../../assets/images/tablecloth-gold.jpg</h3>
+        <img class="test-image" src="../../assets/images/tablecloth-gold.jpg" 
+             onload="this.nextElementSibling.innerHTML='✅ SUCCESS'" 
+             onerror="this.nextElementSibling.innerHTML='❌ FAILED'">
+        <div class="fail"></div>
+    </div>
+
+    <div class="test-container">
+        <h3>Test 6: http://localhost:3000/assets/images/tablecloth-gold.jpg</h3>
+        <img class="test-image" src="http://localhost:3000/assets/images/tablecloth-gold.jpg" 
+             onload="this.nextElementSibling.innerHTML='✅ SUCCESS'" 
+             onerror="this.nextElementSibling.innerHTML='❌ FAILED'">
+        <div class="fail"></div>
+    </div>
+</body>
+</html>
