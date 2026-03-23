@@ -8,6 +8,9 @@
     <!-- Environment variables (will be replaced by Netlify) -->
     <script src="env-config.js"></script>
     
+    <!-- Google Fonts - Premium Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
@@ -16,72 +19,339 @@
     <link rel="stylesheet" href="assets/css/style.css">
     
     <style>
+        /* ============================================
+           PREMIUM LUXURY THEME
+           ============================================ */
+        
+        :root {
+            --gold: #C6A86A;
+            --gold-dark: #B8954F;
+            --black: #171717;
+            --ivory: #F8F5EF;
+            --blush: #D9C2B6;
+            --taupe: #A8998C;
+            --text-dark: #2C2C2C;
+            --text-light: #6B6B6B;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ivory);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+        }
+
+        /* Premium Hero Section */
         .hero-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                url('assets/images/background.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    height: 80vh;
-    display: flex;
-    align-items: center;
-    color: white;
-    text-align: center;
-}
-        .featured-card {
-            transition: transform 0.3s, box-shadow 0.3s;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('assets/images/background.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 85vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 4rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .hero-section .lead {
+            font-size: 1.2rem;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+
+        /* Premium Buttons */
+        .btn-primary-luxury {
+            background-color: var(--black);
+            color: var(--white);
             border: none;
-            border-radius: 15px;
+            padding: 12px 32px;
+            border-radius: 0;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary-luxury:hover {
+            background-color: var(--gold);
+            color: var(--black);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-luxury {
+            background-color: transparent;
+            color: var(--white);
+            border: 1.5px solid var(--white);
+            padding: 12px 32px;
+            border-radius: 0;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline-luxury:hover {
+            background-color: var(--white);
+            color: var(--black);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            position: relative;
+            color: var(--text-dark);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--taupe);
+            font-size: 1rem;
+            letter-spacing: 1px;
+            margin-bottom: 3rem;
+        }
+
+        /* Brand Intro Section */
+        .brand-intro {
+            background-color: var(--white);
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .brand-intro h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .brand-intro p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Category Cards */
+        .category-card {
+            background-color: var(--white);
+            border: none;
+            border-radius: 0;
             overflow: hidden;
-            height: 100%;
-            cursor: pointer;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.02);
         }
-        .featured-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.05);
         }
-        .featured-image {
-            height: 250px;
-            object-fit: cover;
-            width: 100%;
-        }
+
         .category-icon {
             width: 80px;
             height: 80px;
-            background: #f8f9fa;
+            background: var(--ivory);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
             font-size: 2rem;
-            color: #C6A75E;
+            color: var(--gold);
             transition: all 0.3s;
         }
+
         .category-card:hover .category-icon {
-            background: #C6A75E;
-            color: white;
+            background: var(--gold);
+            color: var(--white);
         }
+
+        .category-card h5 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .category-card p {
+            color: var(--taupe);
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Trust Badges */
+        .trust-badge {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .trust-badge i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .trust-badge h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .trust-badge p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Featured Products */
+        .featured-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 0;
+            overflow: hidden;
+            height: 100%;
+            cursor: pointer;
+            background: var(--white);
+        }
+
+        .featured-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.05);
+        }
+
+        .featured-image {
+            height: 250px;
+            object-fit: cover;
+            width: 100%;
+        }
+
         .featured-price {
-            color: #C6A75E;
+            color: var(--gold);
             font-weight: bold;
             font-size: 1.2rem;
         }
-        .stock-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            border-radius: 20px;
+
+        .featured-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .featured-card h6 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Testimonials */
+        .testimonial-card {
+            background: var(--white);
+            padding: 2rem;
+            margin: 1rem;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .testimonial-card:hover {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+        }
+
+        .testimonial-card .stars {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-card p {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .testimonial-card .client-name {
+            font-weight: 600;
+            font-family: 'Cormorant Garamond', serif;
+            margin-bottom: 0;
+            color: var(--text-dark);
+        }
+
+        .testimonial-card .client-title {
             font-size: 0.8rem;
-            font-weight: 500;
+            color: var(--taupe);
         }
-        .stock-badge.in-stock {
-            background: #d4edda;
-            color: #155724;
+
+        /* WhatsApp Floating Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
         }
-        .featured-card {
-            position: relative;
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .btn-primary-luxury, .btn-outline-luxury {
+                padding: 10px 24px;
+            }
+            
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .featured-card .card-body {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
@@ -90,49 +360,59 @@
     <!-- Navbar (loaded dynamically) -->
     <div id="navbar"></div>
 
-    <!-- Hero Section -->
+    <!-- Premium Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <h1 class="display-3 fw-bold mb-4">Veema Events</h1>
-            <p class="lead mb-4">Luxury event décor for weddings, pre-weddings, and special occasions</p>
+            <h1>Veema Events</h1>
+            <p class="lead">Luxury event décor and styling essentials for unforgettable celebrations.</p>
             <div>
-                <a href="products.html" class="btn btn-warning btn-lg me-3">Shop Collection</a>
-                <a href="#featured" class="btn btn-outline-light btn-lg">Explore</a>
+                <a href="products.html" class="btn-primary-luxury me-3">Shop Collection</a>
+                <a href="#featured" class="btn-outline-luxury">View Gallery</a>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="py-5 bg-light">
+    <!-- Brand Intro -->
+    <section class="brand-intro">
         <div class="container">
-            <div class="row g-4">
-                <div class="col-md-3 text-center">
-                    <div class="category-icon">
-                        <i class="bi bi-truck"></i>
-                    </div>
-                    <h5>Free Delivery</h5>
-                    <p class="text-muted small">On orders over Ksh 5,000</p>
-                </div>
-                <div class="col-md-3 text-center">
-                    <div class="category-icon">
-                        <i class="bi bi-shield-check"></i>
-                    </div>
+            <h2>Elevating events with timeless décor essentials</h2>
+            <p>At Veema Events, we supply elegant event and décor pieces for planners, stylists, and celebration spaces across Kenya.</p>
+        </div>
+    </section>
+
+    <!-- Why Choose Veema (Trust Badges) -->
+    <section class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Why Choose Veema</h2>
+            <p class="section-subtitle">Quality, elegance, and trust you can rely on</p>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="trust-badge">
+                    <i class="bi bi-gem"></i>
                     <h5>Premium Quality</h5>
-                    <p class="text-muted small">100% satisfaction guaranteed</p>
+                    <p>Curated luxury pieces</p>
                 </div>
-                <div class="col-md-3 text-center">
-                    <div class="category-icon">
-                        <i class="bi bi-phone"></i>
-                    </div>
-                    <h5>M-Pesa Payments</h5>
-                    <p class="text-muted small">Secure & instant transactions</p>
+            </div>
+            <div class="col-md-3">
+                <div class="trust-badge">
+                    <i class="bi bi-tags"></i>
+                    <h5>Wholesale Pricing</h5>
+                    <p>Competitive rates for professionals</p>
                 </div>
-                <div class="col-md-3 text-center">
-                    <div class="category-icon">
-                        <i class="bi bi-gift"></i>
-                    </div>
-                    <h5>Event Styling</h5>
-                    <p class="text-muted small">Free consultation available</p>
+            </div>
+            <div class="col-md-3">
+                <div class="trust-badge">
+                    <i class="bi bi-truck"></i>
+                    <h5>Reliable Delivery</h5>
+                    <p>Nationwide shipping available</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="trust-badge">
+                    <i class="bi bi-chat-heart"></i>
+                    <h5>Expert Support</h5>
+                    <p>Personalized styling advice</p>
                 </div>
             </div>
         </div>
@@ -141,8 +421,8 @@
     <!-- Featured Products Section -->
     <section id="featured" class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">Featured Products</h2>
-            <p class="text-muted">Our most popular luxury items for your special events</p>
+            <h2 class="section-title">Featured Products</h2>
+            <p class="section-subtitle">Our most popular luxury items for your special events</p>
         </div>
         
         <div class="row g-4" id="featured-products">
@@ -155,60 +435,60 @@
         </div>
         
         <div class="text-center mt-4">
-            <a href="products.html" class="btn btn-outline-dark">View All Products <i class="bi bi-arrow-right"></i></a>
+            <a href="products.html" class="btn-primary-luxury" style="background-color: var(--gold); color: var(--black);">View All Products <i class="bi bi-arrow-right"></i></a>
         </div>
     </section>
 
-    <!-- Categories Section -->
-    <section class="py-5 bg-light">
+    <!-- Shop by Category Section -->
+    <section class="py-5" style="background-color: var(--white);">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="fw-bold">Shop by Category</h2>
-                <p class="text-muted">Find exactly what you need for your event</p>
+                <h2 class="section-title">Shop by Category</h2>
+                <p class="section-subtitle">Find exactly what you need for your event</p>
             </div>
             
             <div class="row g-4">
                 <div class="col-md-3">
                     <a href="products.html?category=Table%20Linens" class="text-decoration-none">
-                        <div class="category-card text-center p-4 bg-white rounded shadow-sm">
+                        <div class="category-card">
                             <div class="category-icon">
                                 <i class="bi bi-table"></i>
                             </div>
                             <h5>Table Linens</h5>
-                            <p class="text-muted small mb-0">Cloths, runners, napkins</p>
+                            <p>Cloths, runners, napkins</p>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-3">
                     <a href="products.html?category=Ribbons" class="text-decoration-none">
-                        <div class="category-card text-center p-4 bg-white rounded shadow-sm">
+                        <div class="category-card">
                             <div class="category-icon">
                                 <i class="bi bi-ribbon"></i>
                             </div>
                             <h5>Ribbons</h5>
-                            <p class="text-muted small mb-0">Chair ties, gift wrapping</p>
+                            <p>Chair ties, gift wrapping</p>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-3">
                     <a href="products.html?category=Tableware" class="text-decoration-none">
-                        <div class="category-card text-center p-4 bg-white rounded shadow-sm">
+                        <div class="category-card">
                             <div class="category-icon">
                                 <i class="bi bi-cup-straw"></i>
                             </div>
                             <h5>Tableware</h5>
-                            <p class="text-muted small mb-0">Chargers, glassware</p>
+                            <p>Chargers, glassware</p>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-3">
                     <a href="products.html?category=Decor" class="text-decoration-none">
-                        <div class="category-card text-center p-4 bg-white rounded shadow-sm">
+                        <div class="category-card">
                             <div class="category-icon">
                                 <i class="bi bi-flower1"></i>
                             </div>
                             <h5>Decor</h5>
-                            <p class="text-muted small mb-0">Centerpieces, candles</p>
+                            <p>Centerpieces, candles</p>
                         </div>
                     </a>
                 </div>
@@ -216,61 +496,56 @@
         </div>
     </section>
 
-    <!-- Testimonials -->
+    <!-- Premium Testimonials -->
     <section class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">What Our Clients Say</h2>
-            <p class="text-muted">Trusted by hundreds of happy couples and event planners</p>
+            <h2 class="section-title">What Our Clients Say</h2>
+            <p class="section-subtitle">Trusted by hundreds of happy couples and event planners</p>
         </div>
         
         <div class="row">
             <div class="col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="text-warning mb-3">★★★★★</div>
-                        <p class="mb-3">"The table cloths and ribbons were absolutely stunning for our wedding. Quality exceeded expectations!"</p>
-                        <div class="d-flex align-items-center">
-                            <div class="bg-secondary rounded-circle" style="width: 50px; height: 50px;"></div>
-                            <div class="ms-3">
-                                <h6 class="mb-0">Sarah & James</h6>
-                                <small class="text-muted">Wedding, Dec 2025</small>
-                            </div>
-                        </div>
-                    </div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p>"The table cloths and ribbons were absolutely stunning for our wedding. Quality exceeded expectations!"</p>
+                    <p class="client-name">Sarah & James</p>
+                    <p class="client-title">Wedding, December 2025</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="text-warning mb-3">★★★★★</div>
-                        <p class="mb-3">"Amazing quality and fast delivery. The gold charger plates were perfect for our corporate gala."</p>
-                        <div class="d-flex align-items-center">
-                            <div class="bg-secondary rounded-circle" style="width: 50px; height: 50px;"></div>
-                            <div class="ms-3">
-                                <h6 class="mb-0">Events by Grace</h6>
-                                <small class="text-muted">Corporate Event Planner</small>
-                            </div>
-                        </div>
-                    </div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p>"Amazing quality and fast delivery. The gold charger plates were perfect for our corporate gala."</p>
+                    <p class="client-name">Events by Grace</p>
+                    <p class="client-title">Corporate Event Planner</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body p-4">
-                        <div class="text-warning mb-3">★★★★★</div>
-                        <p class="mb-3">"The team helped us style our pre-wedding shoot. Everything was elegant and photo-ready!"</p>
-                        <div class="d-flex align-items-center">
-                            <div class="bg-secondary rounded-circle" style="width: 50px; height: 50px;"></div>
-                            <div class="ms-3">
-                                <h6 class="mb-0">Mike & Angela</h6>
-                                <small class="text-muted">Pre-wedding Shoot</small>
-                            </div>
-                        </div>
-                    </div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p>"The team helped us style our pre-wedding shoot. Everything was elegant and photo-ready!"</p>
+                    <p class="client-name">Mike & Angela</p>
+                    <p class="client-title">Pre-wedding Shoot</p>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Contact CTA Section -->
+    <section class="py-5" style="background-color: var(--black);">
+        <div class="container text-center text-white">
+            <h2 class="fw-bold mb-3">Ready to elevate your event?</h2>
+            <p class="mb-4">Let's create something beautiful together.</p>
+            <a href="https://wa.me/254706675003" class="btn-primary-luxury" style="background-color: var(--white); color: var(--black);">
+                <i class="bi bi-whatsapp"></i> Contact Us
+            </a>
+        </div>
+    </section>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/254706675003" class="whatsapp-float" target="_blank">
+        <i class="bi bi-whatsapp"></i>
+    </a>
 
     <!-- Footer (loaded dynamically) -->
     <div id="footer"></div>
@@ -279,147 +554,32 @@
     
     <script>
         // ============================================
-        // FEATURED PRODUCTS - USING SAME DATA AS PRODUCTS PAGE
+        // FEATURED PRODUCTS DATA
         // ============================================
         
-       const basePath = '/assets/images/';
+        const basePath = '/assets/images/';
         
-        // All products data (featured ones have featured = true)
         const allProducts = [
-            {
-                id: 1,
-                name: "Luxury Table Cloth - Gold",
-                price: 3500,
-                category: "Table Linens",
-                image: basePath + "tablecloth-gold.jpg",
-                featured: true
-            },
-            {
-                id: 2,
-                name: "Luxury Table Cloth - White",
-                price: 3500,
-                category: "Table Linens",
-                image: basePath + "tablecloth-white.jpg",
-                featured: true
-            },
-            {
-                id: 3,
-                name: "Premium Chair Ribbon - Burgundy",
-                price: 800,
-                category: "Ribbons",
-                image: basePath + "ribbon-burgundy.jpg",
-                featured: true
-            },
-            {
-                id: 4,
-                name: "Premium Chair Ribbon - Gold",
-                price: 850,
-                category: "Ribbons",
-                image: basePath + "ribbon-gold.jpg",
-                featured: false
-            },
-            {
-                id: 5,
-                name: "Gold Charger Plate",
-                price: 450,
-                category: "Tableware",
-                image: basePath + "charger-gold.jpg",
-                featured: true
-            },
-            {
-                id: 6,
-                name: "Crystal Centerpiece",
-                price: 2500,
-                category: "Decor",
-                image: basePath + "centerpiece-crystal.jpg",
-                featured: true
-            },
-            {
-                id: 7,
-                name: "Sequin Table Runner - Silver",
-                price: 1200,
-                category: "Table Linens",
-                image: basePath + "runner-sequin.jpg",
-                featured: false
-            },
-            {
-                id: 9,
-                name: "Sage Green Balloons",
-                price: 250,
-                category: "Decor",
-                image: basePath + "balloons-sage.jpeg",
-                featured: true
-            },
-            {
-                id: 10,
-                name: "Seat Spandex Cover (Light)",
-                price: 245,
-                category: "Table Linens",
-                image: basePath + "spandex-cover.jpeg",
-                featured: true
-            },
-            {
-                id: 11,
-                name: "Seat Spandex Cover (Heavy)",
-                price: 380,
-                category: "Table Linens",
-                image: basePath + "spandex-cover.jpeg",
-                featured: true
-            },
-            {
-                id: 12,
-                name: "Cheese Table Runner",
-                price: 450,
-                category: "Table Linens",
-                image: basePath + "cheese-runner.jpeg",
-                featured: true
-            },
-            {
-                id: 13,
-                name: "Tie Backs",
-                price: 80,
-                category: "Ribbons",
-                image: basePath + "tie-backs.jpeg",
-                featured: false
-            },
-            {
-                id: 14,
-                name: "Gold Spiral Napkin Ring",
-                price: 100,
-                category: "Tableware",
-                image: basePath + "napring-gold-spiral.jpeg",
-                featured: true
-            },
-            {
-                id: 15,
-                name: "Pearl Napkin Rings",
-                price: 150,
-                category: "Tableware",
-                image: basePath + "napring-pearl.jpeg",
-                featured: true
-            },
-            {
-                id: 16,
-                name: "Butterfly Gold Napkin Ring",
-                price: 130,
-                category: "Tableware",
-                image: basePath + "napring-butterfly.jpeg",
-                featured: false
-            },
-            {
-                id: 17,
-                name: "Acrylic Gold Stand",
-                price: 5000,
-                category: "Decor",
-                image: basePath + "acrylic-stand.jpeg",
-                featured: true
-            }
+            { id: 1, name: "Luxury Table Cloth - Gold", price: 3500, category: "Table Linens", image: basePath + "tablecloth-gold.jpg", featured: true },
+            { id: 2, name: "Luxury Table Cloth - White", price: 3500, category: "Table Linens", image: basePath + "tablecloth-white.jpg", featured: true },
+            { id: 3, name: "Premium Chair Ribbon - Burgundy", price: 800, category: "Ribbons", image: basePath + "ribbon-burgundy.jpg", featured: true },
+            { id: 4, name: "Premium Chair Ribbon - Gold", price: 850, category: "Ribbons", image: basePath + "ribbon-gold.jpg", featured: false },
+            { id: 5, name: "Gold Charger Plate", price: 450, category: "Tableware", image: basePath + "charger-gold.jpg", featured: true },
+            { id: 6, name: "Crystal Centerpiece", price: 2500, category: "Decor", image: basePath + "centerpiece-crystal.jpg", featured: true },
+            { id: 7, name: "Sequin Table Runner - Silver", price: 1200, category: "Table Linens", image: basePath + "runner-sequin.jpg", featured: false },
+            { id: 9, name: "Sage Green Balloons", price: 250, category: "Decor", image: basePath + "balloons-sage.jpeg", featured: true },
+            { id: 10, name: "Seat Spandex Cover (Light)", price: 245, category: "Table Linens", image: basePath + "spandex-cover.jpeg", featured: true },
+            { id: 11, name: "Seat Spandex Cover (Heavy)", price: 380, category: "Table Linens", image: basePath + "spandex-cover.jpeg", featured: true },
+            { id: 12, name: "Cheese Table Runner", price: 450, category: "Table Linens", image: basePath + "cheese-runner.jpeg", featured: true },
+            { id: 13, name: "Tie Backs", price: 80, category: "Ribbons", image: basePath + "tie-backs.jpeg", featured: false },
+            { id: 14, name: "Gold Spiral Napkin Ring", price: 100, category: "Tableware", image: basePath + "napring-gold-spiral.jpeg", featured: true },
+            { id: 15, name: "Pearl Napkin Rings", price: 150, category: "Tableware", image: basePath + "napring-pearl.jpeg", featured: true },
+            { id: 16, name: "Butterfly Gold Napkin Ring", price: 130, category: "Tableware", image: basePath + "napring-butterfly.jpeg", featured: false },
+            { id: 17, name: "Acrylic Gold Stand", price: 5000, category: "Decor", image: basePath + "acrylic-stand.jpeg", featured: true }
         ];
 
-        // Get only featured products
         const featuredProducts = allProducts.filter(p => p.featured === true);
 
-        // Display featured products
         document.addEventListener('DOMContentLoaded', function() {
             displayFeaturedProducts();
             loadNavbar();
@@ -434,7 +594,6 @@
                 return;
             }
 
-            // Take first 8 featured products
             const productsToShow = featuredProducts.slice(0, 8);
             
             let html = '';
