@@ -182,7 +182,7 @@
                         </div>
 
                         <!-- Google Login Button - UPDATE THIS URL AFTER DEPLOYMENT -->
-                       <a href="https://veema-events-backend.onrender.com/api/auth/google" class="btn-google w-100">
+                       <a href="https://veema-events-backend.railway.app/api/auth/google" class="btn-google w-100">
                            <i class="bi bi-google"></i> 
                             Sign in with Google
                         </a>
@@ -205,8 +205,7 @@
         // ============================================
         // AFTER DEPLOYMENT, REPLACE WITH YOUR LIVE BACKEND URL
         // ============================================
-       const API_BASE_URL = 'https://veema-events-backend.onrender.com/api';
-        
+const API_BASE_URL = 'https://veema-events-backend.railway.app/api';        
         // Check if already logged in
         document.addEventListener('DOMContentLoaded', function() {
             const token = localStorage.getItem('token');
