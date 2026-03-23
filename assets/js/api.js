@@ -19,7 +19,7 @@ const API = {
         }
         
         // Fallback for development
-        return 'https://your-backend.onrender.com/api'; // ← UPDATE THIS
+         return 'https://veema-events-backend.railway.app/api'; // ← UPDATE THIS
     })(),
     
     // Get auth token from localStorage
