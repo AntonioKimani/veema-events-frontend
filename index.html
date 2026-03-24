@@ -507,8 +507,8 @@
             <div class="col-md-4 mb-4">
                 <div class="testimonial-card">
                     <div class="stars">★★★★★</div>
-                    <p>"The table cloths and ribbons were absolutely stunning for our wedding. Quality exceeded expectations!"</p>
-                    <p class="client-name">Sarah & James</p>
+                    <p>"The seat spandex quality was amazing, I truly loved how neat and elegant they looked."</p>
+                    <p class="client-name">Event Planner</p>
                     <p class="client-title">Wedding, December 2025</p>
                 </div>
             </div>
@@ -523,9 +523,9 @@
             <div class="col-md-4 mb-4">
                 <div class="testimonial-card">
                     <div class="stars">★★★★★</div>
-                    <p>"The team helped us style our pre-wedding shoot. Everything was elegant and photo-ready!"</p>
-                    <p class="client-name">Mike & Angela</p>
-                    <p class="client-title">Pre-wedding Shoot</p>
+                    <p>"Their customer service is warm, responsive, and very helpful throughout the whole process."</p>
+                    <p class="client-name">Event Planner</p>
+                    <p class="client-title">Event Planner </p>
                 </div>
             </div>
         </div>
@@ -660,6 +660,81 @@
             fetch('footer.html')
                 .then(r => r.text())
                 .then(d => document.getElementById('footer').innerHTML = d);
+        }
+    </script>
+    
+    <!-- ============================================
+         FIREBASE ADMIN CHECK
+    ============================================ -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0D7OnPSrkF0fFrcdQnYpTJGIyGjUNlWU",
+            authDomain: "veema-events.firebaseapp.com",
+            projectId: "veema-events",
+            storageBucket: "veema-events.firebasestorage.app",
+            messagingSenderId: "933547953857",
+            appId: "1:933547953857:web:84fe2d92fb721763508e40"
+        };
+        
+        // Initialize Firebase
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        const auth = firebase.auth();
+        const BACKEND_URL = window.ENV?.BACKEND_URL || 'https://veema-events-backend.railway.app';
+        
+        // Check if user is logged in and is admin
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                const token = await user.getIdToken();
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/auth/is-admin`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+                    
+                    if (data.isAdmin) {
+                        // Show admin badge in navbar
+                        const adminBadge = document.createElement('span');
+                        adminBadge.className = 'badge bg-warning text-dark ms-2';
+                        adminBadge.textContent = 'Admin';
+                        
+                        const userNameSpan = document.getElementById('userName');
+                        if (userNameSpan) {
+                            userNameSpan.parentElement.appendChild(adminBadge);
+                        }
+                        
+                        // Add admin dashboard link to dropdown
+                        const logoutDivider = document.getElementById('logoutDivider');
+                        if (logoutDivider) {
+                            const adminLink = document.createElement('a');
+                            adminLink.href = 'admin/dashboard.html';
+                            adminLink.className = 'dropdown-item';
+                            adminLink.innerHTML = '<i class="bi bi-speedometer2"></i> Admin Dashboard';
+                            logoutDivider.insertAdjacentElement('afterend', adminLink);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Admin check error:', error);
+                }
+            }
+        });
+        
+        function handleLogout() {
+            auth.signOut().then(() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'index.html';
+            }).catch(() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'index.html';
+            });
         }
     </script>
 </body>
