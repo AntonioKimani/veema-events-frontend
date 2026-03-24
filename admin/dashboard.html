@@ -7,306 +7,77 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background: #F8F5EF;
-            font-family: 'Inter', sans-serif;
-        }
-        .sidebar {
-            background: #171717;
-            min-height: 100vh;
-            color: white;
-            position: sticky;
-            top: 0;
-        }
-        .sidebar a {
-            color: #C6A86A;
-            text-decoration: none;
-            display: block;
-            padding: 12px 20px;
-            transition: all 0.3s;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            background: #2c2c2c;
-            color: #fff;
-        }
-        .sidebar a i {
-            margin-right: 10px;
-            width: 25px;
-        }
-        .main-content {
-            padding: 30px;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-            height: 100%;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        .stat-number {
-            font-size: 2.2rem;
-            font-weight: bold;
-            color: #C6A86A;
-            margin-bottom: 5px;
-        }
-        .stat-label {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-        .stat-icon {
-            font-size: 2rem;
-            color: #C6A86A;
-            opacity: 0.5;
-        }
-        .recent-orders-table {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        .recent-orders-table th {
-            background: #f8f9fa;
-            border: none;
-            padding: 15px;
-        }
-        .recent-orders-table td {
-            padding: 12px 15px;
-            vertical-align: middle;
-        }
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        .status-completed {
-            background: #d4edda;
-            color: #155724;
-        }
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-        .status-processing {
-            background: #cce5ff;
-            color: #004085;
-        }
-        .status-cancelled {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #C6A86A;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        .welcome-section {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        .btn-logout {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        .btn-logout:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                min-height: auto;
-                position: relative;
-            }
-            .main-content {
-                padding: 20px;
-            }
-            .stat-number {
-                font-size: 1.5rem;
-            }
-        }
+        body { background: #F8F5EF; font-family: 'Inter', sans-serif; }
+        .sidebar { background: #171717; min-height: 100vh; color: white; }
+        .sidebar a { color: #C6A86A; text-decoration: none; display: block; padding: 12px 20px; }
+        .sidebar a:hover, .sidebar a.active { background: #2c2c2c; color: #fff; }
+        .sidebar a i { margin-right: 10px; width: 25px; }
+        .main-content { padding: 30px; }
+        .stat-card { background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; }
+        .stat-number { font-size: 2rem; font-weight: bold; color: #C6A86A; }
+        .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
             <div class="col-md-2 p-0 sidebar">
                 <div class="p-3 text-center border-bottom border-secondary">
                     <h4 class="text-warning mb-0">Veema Events</h4>
                     <small class="text-muted">Admin Panel</small>
                 </div>
                 <div class="mt-3">
-                    <a href="dashboard.html" class="active">
-                        <i class="bi bi-speedometer2"></i> Dashboard
-                    </a>
-                    <a href="products.html">
-                        <i class="bi bi-box"></i> Products
-                    </a>
-                    <a href="orders.html">
-                        <i class="bi bi-cart"></i> Orders
-                    </a>
-                    <a href="users.html">
-                        <i class="bi bi-people"></i> Users
-                    </a>
+                    <a href="dashboard.html" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    <a href="products.html"><i class="bi bi-box"></i> Products</a>
                     <hr class="mx-3 my-2 bg-secondary">
-                    <a href="#" onclick="logout()">
-                        <i class="bi bi-box-arrow-right"></i> Logout
-                    </a>
+                    <a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a>
                 </div>
             </div>
 
-            <!-- Main Content -->
             <div class="col-md-10 main-content">
-                <!-- Welcome Section -->
-                <div class="welcome-section">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="user-info">
-                            <div class="user-avatar" id="userAvatar">
-                                <i class="bi bi-person-fill"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0" id="userName">Admin</h4>
-                                <p class="text-muted mb-0" id="userEmail">Loading...</p>
-                            </div>
-                        </div>
-                        <button class="btn-logout" onclick="logout()">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </button>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Admin Dashboard</h2>
+                    <div>
+                        <span id="adminEmail" class="me-3 text-muted"></span>
+                        <button class="btn-logout" onclick="logout()">Logout</button>
                     </div>
-                    <p class="mt-3 mb-0 text-muted">Welcome back! Here's what's happening with your store today.</p>
                 </div>
 
-                <!-- Stats Cards -->
-                <div class="row g-4 mb-5">
+                <div class="row">
                     <div class="col-md-3">
                         <div class="stat-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="stat-number" id="totalProducts">-</div>
-                                    <div class="stat-label">Total Products</div>
-                                </div>
-                                <i class="bi bi-box stat-icon"></i>
-                            </div>
-                            <div class="mt-3 small text-muted">
-                                <i class="bi bi-arrow-up-short"></i> <span id="productsChange">0</span> this month
-                            </div>
+                            <div class="stat-number" id="totalProducts">-</div>
+                            <div class="text-muted">Total Products</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stat-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="stat-number" id="totalOrders">-</div>
-                                    <div class="stat-label">Total Orders</div>
-                                </div>
-                                <i class="bi bi-cart stat-icon"></i>
-                            </div>
-                            <div class="mt-3 small text-muted">
-                                <i class="bi bi-arrow-up-short"></i> <span id="ordersChange">0</span> this month
-                            </div>
+                            <div class="stat-number" id="totalOrders">-</div>
+                            <div class="text-muted">Total Orders</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stat-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="stat-number" id="totalUsers">-</div>
-                                    <div class="stat-label">Total Users</div>
-                                </div>
-                                <i class="bi bi-people stat-icon"></i>
-                            </div>
-                            <div class="mt-3 small text-muted">
-                                <i class="bi bi-arrow-up-short"></i> <span id="usersChange">0</span> new this month
-                            </div>
+                            <div class="stat-number" id="totalUsers">-</div>
+                            <div class="text-muted">Total Users</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stat-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <div class="stat-number" id="totalRevenue">-</div>
-                                    <div class="stat-label">Total Revenue</div>
-                                </div>
-                                <i class="bi bi-currency-dollar stat-icon"></i>
-                            </div>
-                            <div class="mt-3 small text-muted">
-                                <i class="bi bi-arrow-up-short"></i> <span id="revenueChange">0</span> this month
-                            </div>
+                            <div class="stat-number" id="totalRevenue">-</div>
+                            <div class="text-muted">Revenue (Ksh)</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Recent Orders Section -->
-                <div class="recent-orders-table">
-                    <div class="p-3 border-bottom bg-white">
-                        <h5 class="mb-0 fw-bold">Recent Orders</h5>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Date</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recentOrdersTable">
-                                <tr>
-                                    <td colspan="6" class="text-center py-4">
-                                        <div class="spinner-border text-warning" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <div class="stat-card text-center">
-                            <i class="bi bi-plus-circle fs-1 text-warning mb-3 d-block"></i>
-                            <h6>Add New Product</h6>
-                            <p class="text-muted small">Quickly add a new product to your store</p>
-                            <a href="products.html" class="btn btn-dark btn-sm">Go to Products</a>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="stat-card text-center">
-                            <i class="bi bi-truck fs-1 text-warning mb-3 d-block"></i>
-                            <h6>Manage Orders</h6>
-                            <p class="text-muted small">View and update order statuses</p>
-                            <a href="orders.html" class="btn btn-dark btn-sm">View Orders</a>
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5>Quick Actions</h5>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <a href="products.html" class="btn btn-dark w-100">Manage Products</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -314,13 +85,11 @@
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyA0D7OnPSrkF0fFrcdQnYpTJGIyGjUNlWU",
             authDomain: "veema-events.firebaseapp.com",
@@ -330,175 +99,44 @@
             appId: "1:933547953857:web:84fe2d92fb721763508e40"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const BACKEND_URL = window.ENV?.BACKEND_URL || 'https://veema-events-backend.railway.app';
 
-        let currentUserToken = null;
-
-        // Check authentication and admin status
+        // Check if user is logged in and is admin (using Firebase claims)
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
                 window.location.href = '../login.html';
                 return;
             }
+
+            document.getElementById('adminEmail').textContent = user.email;
+
+            // Get ID token with claims
+            const tokenResult = await user.getIdTokenResult();
             
-            // Display user info
-            document.getElementById('userEmail').textContent = user.email;
-            const name = user.displayName || user.email.split('@')[0];
-            document.getElementById('userName').textContent = name;
-            document.getElementById('userAvatar').innerHTML = `<i class="bi bi-person-fill"></i>`;
-            
-            currentUserToken = await user.getIdToken();
-            
-            // Verify admin status with backend
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/auth/is-admin`, {
-                    headers: { 'Authorization': `Bearer ${currentUserToken}` }
-                });
-                const data = await response.json();
-                
-                if (!data.isAdmin) {
-                    alert('Access denied. Admin privileges required.');
-                    window.location.href = '../index.html';
-                } else {
-                    // Load dashboard data
-                    loadDashboardStats();
-                    loadRecentOrders();
-                }
-            } catch (error) {
-                console.error('Admin verification failed:', error);
+            // Check if user has admin claim
+            if (tokenResult.claims.admin === true) {
+                console.log('✅ Admin user confirmed!');
+                loadStats();
+            } else {
+                console.log('❌ Not an admin user');
+                alert('Access denied. Admin privileges required.');
                 window.location.href = '../index.html';
             }
         });
 
-        // Load dashboard statistics
-        async function loadDashboardStats() {
-            try {
-                // Get products count
-                const productsRes = await fetch(`${BACKEND_URL}/api/products`, {
-                    headers: { 'Authorization': `Bearer ${currentUserToken}` }
-                });
-                const products = await productsRes.json();
-                const productCount = products.products?.length || 0;
-                document.getElementById('totalProducts').textContent = productCount;
-                document.getElementById('productsChange').textContent = productCount;
-                
-                // Get orders count (placeholder - implement actual API)
-                const ordersRes = await fetch(`${BACKEND_URL}/api/orders`, {
-                    headers: { 'Authorization': `Bearer ${currentUserToken}` }
-                }).catch(() => ({ json: () => ({ length: 0 }) }));
-                const orders = await ordersRes.json();
-                const orderCount = orders.length || 0;
-                document.getElementById('totalOrders').textContent = orderCount;
-                document.getElementById('ordersChange').textContent = orderCount;
-                
-                // Get users count
-                let userCount = 0;
-                try {
-                    const usersRes = await fetch(`${BACKEND_URL}/api/admin/users`, {
-                        headers: { 'Authorization': `Bearer ${currentUserToken}` }
-                    });
-                    const users = await usersRes.json();
-                    userCount = users.length || 0;
-                } catch (e) {
-                    console.log('Users API not ready yet');
-                }
-                document.getElementById('totalUsers').textContent = userCount;
-                document.getElementById('usersChange').textContent = userCount;
-                
-                // Calculate revenue
-                let revenue = 0;
-                if (orders.length) {
-                    revenue = orders.reduce((sum, order) => sum + (order.total_amount || 0), 0);
-                }
-                document.getElementById('totalRevenue').textContent = `Ksh ${revenue.toLocaleString()}`;
-                document.getElementById('revenueChange').textContent = `Ksh ${revenue.toLocaleString()}`;
-                
-            } catch (error) {
-                console.error('Error loading dashboard stats:', error);
-                document.getElementById('totalProducts').textContent = 'Error';
-                document.getElementById('totalOrders').textContent = 'Error';
-                document.getElementById('totalUsers').textContent = 'Error';
-                document.getElementById('totalRevenue').textContent = 'Error';
-            }
+        function loadStats() {
+            // Load stats from localStorage or API
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            document.getElementById('totalProducts').textContent = '17'; // Hardcoded for now
+            document.getElementById('totalOrders').textContent = '0';
+            document.getElementById('totalUsers').textContent = '1';
+            document.getElementById('totalRevenue').textContent = '0';
         }
 
-        // Load recent orders (sample data - replace with actual API)
-        async function loadRecentOrders() {
-            const tbody = document.getElementById('recentOrdersTable');
-            
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/orders`, {
-                    headers: { 'Authorization': `Bearer ${currentUserToken}` }
-                });
-                const orders = await response.json();
-                
-                if (!orders || orders.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No orders yet</td></tr>';
-                    return;
-                }
-                
-                // Get only last 5 orders
-                const recentOrders = orders.slice(0, 5);
-                
-                let html = '';
-                recentOrders.forEach(order => {
-                    let statusClass = '';
-                    let statusText = order.status || 'pending';
-                    switch (statusText) {
-                        case 'completed':
-                            statusClass = 'status-completed';
-                            break;
-                        case 'processing':
-                            statusClass = 'status-processing';
-                            break;
-                        case 'cancelled':
-                            statusClass = 'status-cancelled';
-                            break;
-                        default:
-                            statusClass = 'status-pending';
-                    }
-                    
-                    html += `
-                        <tr>
-                            <td><span class="fw-bold">${order.order_number || '#' + order.id}</span></td>
-                            <td>${order.customer_name || 'Guest'}</td>
-                            <td>${new Date(order.created_at).toLocaleDateString()}</td>
-                            <td>Ksh ${(order.total_amount || 0).toLocaleString()}</td>
-                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-dark" onclick="viewOrder(${order.id})">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                
-                tbody.innerHTML = html;
-            } catch (error) {
-                console.error('Error loading orders:', error);
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-danger">Error loading orders</td></tr>';
-            }
-        }
-
-        // View order details
-        function viewOrder(orderId) {
-            alert(`View order ${orderId} - This will open order details page`);
-            // window.location.href = `order-details.html?id=${orderId}`;
-        }
-
-        // Logout function
         async function logout() {
-            try {
-                await auth.signOut();
-                window.location.href = '../login.html';
-            } catch (error) {
-                console.error('Logout error:', error);
-                window.location.href = '../login.html';
-            }
+            await auth.signOut();
+            window.location.href = '../login.html';
         }
     </script>
 </body>
