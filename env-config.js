@@ -1,5 +1,6 @@
-// frontend/env-config.js
-// This file will be replaced by Netlify with actual environment variables
+// env-config.js
+// This file is replaced by Netlify during build
+// For local development, use these default values
 
 window.ENV = {
     BACKEND_URL: 'https://veema-events-backend.railway.app'
