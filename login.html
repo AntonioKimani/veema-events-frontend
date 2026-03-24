@@ -4,30 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Veema Events</title>
-    <script src="env-config.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #F8F5EF 0%, #E8E2D9 100%);
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         .login-card {
             border: none;
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
         .login-header {
-            background: #C6A75E;
-            color: white;
+            background: #171717;
+            color: #C6A86A;
             padding: 30px;
             text-align: center;
         }
         .login-header h2 {
             margin: 0;
             font-weight: 600;
+            font-family: 'Cormorant Garamond', serif;
         }
         .login-body {
             padding: 40px;
@@ -39,14 +39,13 @@
             border: 2px solid #e0e0e0;
             padding: 10px 15px;
             font-size: 16px;
-            transition: all 0.3s;
         }
         .form-control:focus {
-            border-color: #C6A75E;
+            border-color: #C6A86A;
             box-shadow: none;
         }
         .btn-login {
-            background: #C6A75E;
+            background: #171717;
             color: white;
             height: 50px;
             border-radius: 8px;
@@ -56,9 +55,8 @@
             transition: all 0.3s;
         }
         .btn-login:hover {
-            background: #b8954f;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(198, 167, 94, 0.3);
+            background: #C6A86A;
+            color: #171717;
         }
         .btn-google {
             background: white;
@@ -74,12 +72,11 @@
             gap: 10px;
             transition: all 0.3s;
             text-decoration: none;
+            width: 100%;
         }
         .btn-google:hover {
             background: #f8f9fa;
-            border-color: #C6A75E;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #C6A86A;
         }
         .btn-google i {
             color: #4285f4;
@@ -109,25 +106,6 @@
         }
         .alert {
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .register-link a {
-            color: #C6A75E;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-        .spinner-border {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
         }
     </style>
 </head>
@@ -141,55 +119,38 @@
                 <div class="login-card">
                     <div class="login-header">
                         <h2><i class="bi bi-calendar-event"></i> Veema Events</h2>
-                        <p class="mb-0">Welcome back! Please login to continue</p>
+                        <p class="mb-0 text-white-50">Welcome back</p>
                     </div>
                     
                     <div class="login-body">
-                        <!-- Error Message Display -->
                         <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
-                        
-                        <!-- Success Message Display -->
                         <div id="successMessage" class="alert alert-success" style="display: none;"></div>
 
-                        <!-- Login Form -->
                         <form id="loginForm">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Email Address</label>
-                                <input type="email" class="form-control" id="email" 
-                                       placeholder="Enter your email" required>
+                                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
                             </div>
-                            
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Password</label>
-                                <input type="password" class="form-control" id="password" 
-                                       placeholder="Enter your password" required>
-                                <div class="text-end mt-2">
-                                    <a href="forgot-password.html" class="text-muted small">Forgot password?</a>
-                                </div>
+                                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
                             </div>
-                            
                             <button type="submit" class="btn btn-login w-100" id="loginBtn">
                                 <span id="loginText">Login</span>
-                                <span id="loginSpinner" style="display: none;">
-                                    <span class="spinner-border spinner-border-sm"></span> Logging in...
-                                </span>
+                                <span id="loginSpinner" style="display: none;">Logging in...</span>
                             </button>
                         </form>
 
-                        <!-- Divider -->
                         <div class="divider">
                             <span>OR</span>
                         </div>
 
-                        <!-- Google Login Button - UPDATE THIS URL AFTER DEPLOYMENT -->
-                       <a href="https://veema-events-backend.railway.app/api/auth/google" class="btn-google w-100">
-                           <i class="bi bi-google"></i> 
-                            Sign in with Google
-                        </a>
+                        <button class="btn-google w-100" onclick="googleLogin()">
+                            <i class="bi bi-google"></i> Sign in with Google
+                        </button>
 
-                        <!-- Register Link -->
-                        <div class="register-link">
-                            <p class="mb-0">Don't have an account? <a href="register.html">Create one now</a></p>
+                        <div class="text-center mt-4">
+                            <p class="mb-0">Don't have an account? <a href="register.html" style="color: #C6A86A;">Create one now</a></p>
                         </div>
                     </div>
                 </div>
@@ -199,132 +160,92 @@
 
     <div id="footer"></div>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         // ============================================
-        // AFTER DEPLOYMENT, REPLACE WITH YOUR LIVE BACKEND URL
+        // FIREBASE CONFIG - YOUR ACTUAL CONFIG
         // ============================================
-const API_BASE_URL = 'https://veema-events-backend.railway.app/api';        
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0D7OnPSrkF0fFrcdQnYpTJGIyGjUNlWU",
+            authDomain: "veema-events.firebaseapp.com",
+            projectId: "veema-events",
+            storageBucket: "veema-events.firebasestorage.app",
+            messagingSenderId: "933547953857",
+            appId: "1:933547953857:web:84fe2d92fb721763508e40"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
         // Check if already logged in
-        document.addEventListener('DOMContentLoaded', function() {
-            const token = localStorage.getItem('token');
-            if (token) {
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
                 window.location.href = 'index.html';
             }
-            
-            // Check for error in URL (from Google auth failure)
-            const urlParams = new URLSearchParams(window.location.search);
-            const error = urlParams.get('error');
-            if (error) {
-                showError(decodeURIComponent(error));
-            }
-            
-            loadNavbar();
-            loadFooter();
         });
 
-        // Handle login form submission
+        // Email/Password Login
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
-            if (!email || !password) {
-                showError('Please enter both email and password');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showError('Password must be at least 6 characters');
-                return;
-            }
-            
-            setLoading(true);
-            hideError();
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success && data.token) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    
-                    showSuccess('Login successful! Redirecting...');
-                    
-                    setTimeout(() => {
-                        if (data.user && data.user.role === 'admin') {
-                            window.location.href = 'admin/dashboard.html';
-                        } else {
-                            window.location.href = 'index.html';
-                        }
-                    }, 1000);
-                } else {
-                    showError(data.message || 'Login failed. Please check your credentials.');
-                    setLoading(false);
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                showError('Connection error. Please try again.');
-                setLoading(false);
-            }
-        });
-
-        function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            setTimeout(() => hideError(), 5000);
-        }
-
-        function hideError() {
-            document.getElementById('errorMessage').style.display = 'none';
-        }
-
-        function showSuccess(message) {
-            const successDiv = document.getElementById('successMessage');
-            successDiv.textContent = message;
-            successDiv.style.display = 'block';
-        }
-
-        function setLoading(isLoading) {
+            const loginBtn = document.getElementById('loginBtn');
             const loginText = document.getElementById('loginText');
             const loginSpinner = document.getElementById('loginSpinner');
-            const loginBtn = document.getElementById('loginBtn');
             
-            if (isLoading) {
-                loginText.style.display = 'none';
-                loginSpinner.style.display = 'inline-block';
-                loginBtn.disabled = true;
-            } else {
+            errorDiv.style.display = 'none';
+            loginText.style.display = 'none';
+            loginSpinner.style.display = 'inline-block';
+            loginBtn.disabled = true;
+            
+            try {
+                await firebase.auth().signInWithEmailAndPassword(email, password);
+                // Success - redirect handled by onAuthStateChanged
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = 'block';
                 loginText.style.display = 'inline';
                 loginSpinner.style.display = 'none';
                 loginBtn.disabled = false;
             }
+        });
+
+        // Google Login
+        async function googleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                await firebase.auth().signInWithPopup(provider);
+                // Success - redirect handled by onAuthStateChanged
+            } catch (error) {
+                alert(error.message);
+            }
         }
 
+        // Load navbar and footer
         function loadNavbar() {
             fetch('navbar.html')
                 .then(r => r.text())
                 .then(d => document.getElementById('navbar').innerHTML = d)
-                .catch(e => console.log('Navbar load error:', e));
+                .catch(e => console.log('Navbar error:', e));
         }
 
         function loadFooter() {
             fetch('footer.html')
                 .then(r => r.text())
                 .then(d => document.getElementById('footer').innerHTML = d)
-                .catch(e => console.log('Footer load error:', e));
+                .catch(e => console.log('Footer error:', e));
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbar();
+            loadFooter();
+        });
     </script>
 </body>
 </html>
