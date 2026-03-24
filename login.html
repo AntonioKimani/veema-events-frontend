@@ -29,6 +29,10 @@
             font-weight: 600;
             font-family: 'Cormorant Garamond', serif;
         }
+        .login-header p {
+            margin: 5px 0 0;
+            font-size: 0.9rem;
+        }
         .login-body {
             padding: 40px;
             background: white;
@@ -39,10 +43,12 @@
             border: 2px solid #e0e0e0;
             padding: 10px 15px;
             font-size: 16px;
+            transition: all 0.3s;
         }
         .form-control:focus {
             border-color: #C6A86A;
             box-shadow: none;
+            outline: none;
         }
         .btn-login {
             background: #171717;
@@ -57,6 +63,7 @@
         .btn-login:hover {
             background: #C6A86A;
             color: #171717;
+            transform: translateY(-2px);
         }
         .btn-google {
             background: white;
@@ -73,10 +80,12 @@
             transition: all 0.3s;
             text-decoration: none;
             width: 100%;
+            cursor: pointer;
         }
         .btn-google:hover {
             background: #f8f9fa;
             border-color: #C6A86A;
+            transform: translateY(-2px);
         }
         .btn-google i {
             color: #4285f4;
@@ -93,7 +102,7 @@
             top: 50%;
             left: 0;
             right: 0;
-            height: 2px;
+            height: 1px;
             background: #e0e0e0;
             z-index: 1;
         }
@@ -103,9 +112,38 @@
             position: relative;
             z-index: 2;
             color: #999;
+            font-size: 0.9rem;
         }
         .alert {
             border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+        }
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 8px;
+        }
+        .forgot-password {
+            font-size: 0.85rem;
+            color: #C6A86A;
+            text-decoration: none;
+        }
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        .register-link a {
+            color: #C6A86A;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -119,7 +157,7 @@
                 <div class="login-card">
                     <div class="login-header">
                         <h2><i class="bi bi-calendar-event"></i> Veema Events</h2>
-                        <p class="mb-0 text-white-50">Welcome back</p>
+                        <p class="text-white-50">Welcome back to luxury event décor</p>
                     </div>
                     
                     <div class="login-body">
@@ -129,15 +167,22 @@
                         <form id="loginForm">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Email Address</label>
-                                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                                <input type="email" class="form-control" id="email" 
+                                       placeholder="Enter your email" required>
                             </div>
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Password</label>
-                                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                                <input type="password" class="form-control" id="password" 
+                                       placeholder="Enter your password" required>
+                                <div class="text-end mt-2">
+                                    <a href="forgot-password.html" class="forgot-password">Forgot password?</a>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-login w-100" id="loginBtn">
                                 <span id="loginText">Login</span>
-                                <span id="loginSpinner" style="display: none;">Logging in...</span>
+                                <span id="loginSpinner" style="display: none;">
+                                    <span class="spinner-border spinner-border-sm"></span> Logging in...
+                                </span>
                             </button>
                         </form>
 
@@ -145,12 +190,12 @@
                             <span>OR</span>
                         </div>
 
-                        <button class="btn-google w-100" onclick="googleLogin()">
+                        <button class="btn-google w-100" id="googleLoginBtn">
                             <i class="bi bi-google"></i> Sign in with Google
                         </button>
 
-                        <div class="text-center mt-4">
-                            <p class="mb-0">Don't have an account? <a href="register.html" style="color: #C6A86A;">Create one now</a></p>
+                        <div class="register-link">
+                            <p class="mb-0">Don't have an account? <a href="register.html">Create one now</a></p>
                         </div>
                     </div>
                 </div>
@@ -167,7 +212,7 @@
 
     <script>
         // ============================================
-        // FIREBASE CONFIG - YOUR ACTUAL CONFIG
+        // FIREBASE CONFIGURATION
         // ============================================
         const firebaseConfig = {
             apiKey: "AIzaSyA0D7OnPSrkF0fFrcdQnYpTJGIyGjUNlWU",
@@ -180,35 +225,86 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-        // Check if already logged in
-        firebase.auth().onAuthStateChanged((user) => {
+        // Backend URL
+        const BACKEND_URL = window.ENV?.BACKEND_URL || 'https://veema-events-backend.railway.app';
+
+        // ============================================
+        // CHECK IF USER IS ALREADY LOGGED IN
+        // ============================================
+        auth.onAuthStateChanged(async (user) => {
             if (user) {
-                window.location.href = 'index.html';
+                const token = await user.getIdToken();
+                
+                try {
+                    // Check admin status from backend
+                    const response = await fetch(`${BACKEND_URL}/api/auth/is-admin`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+                    
+                    if (data.isAdmin) {
+                        window.location.href = 'admin/dashboard.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                } catch (error) {
+                    console.error('Error checking admin status:', error);
+                    window.location.href = 'index.html';
+                }
             }
         });
 
-        // Email/Password Login
+        // ============================================
+        // EMAIL/PASSWORD LOGIN
+        // ============================================
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
             const loginBtn = document.getElementById('loginBtn');
             const loginText = document.getElementById('loginText');
             const loginSpinner = document.getElementById('loginSpinner');
             
+            // Hide previous messages
             errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            // Show loading state
             loginText.style.display = 'none';
             loginSpinner.style.display = 'inline-block';
             loginBtn.disabled = true;
             
             try {
-                await firebase.auth().signInWithEmailAndPassword(email, password);
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 // Success - redirect handled by onAuthStateChanged
+                console.log('Login successful:', userCredential.user.email);
             } catch (error) {
-                errorDiv.textContent = error.message;
+                let errorMessage = 'Login failed. ';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'No account found with this email address.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Incorrect password. Please try again.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Invalid email address format.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Too many failed attempts. Please try again later.';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'This account has been disabled.';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                errorDiv.textContent = errorMessage;
                 errorDiv.style.display = 'block';
                 loginText.style.display = 'inline';
                 loginSpinner.style.display = 'none';
@@ -216,18 +312,43 @@
             }
         });
 
-        // Google Login
-        async function googleLogin() {
+        // ============================================
+        // GOOGLE LOGIN
+        // ============================================
+        document.getElementById('googleLoginBtn').addEventListener('click', async function() {
             const provider = new firebase.auth.GoogleAuthProvider();
+            const errorDiv = document.getElementById('errorMessage');
+            
+            errorDiv.style.display = 'none';
+            this.disabled = true;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Redirecting...';
+            
             try {
-                await firebase.auth().signInWithPopup(provider);
+                await auth.signInWithPopup(provider);
                 // Success - redirect handled by onAuthStateChanged
             } catch (error) {
-                alert(error.message);
+                console.error('Google login error:', error);
+                let errorMessage = 'Google login failed. ';
+                switch (error.code) {
+                    case 'auth/popup-closed-by-user':
+                        errorMessage = 'Login popup was closed. Please try again.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'Network error. Please check your connection.';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                errorDiv.textContent = errorMessage;
+                errorDiv.style.display = 'block';
+                this.disabled = false;
+                this.innerHTML = '<i class="bi bi-google"></i> Sign in with Google';
             }
-        }
+        });
 
-        // Load navbar and footer
+        // ============================================
+        // LOAD NAVBAR AND FOOTER
+        // ============================================
         function loadNavbar() {
             fetch('navbar.html')
                 .then(r => r.text())

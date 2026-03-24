@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Veema Events</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #F8F5EF;
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar {
+            background: #171717;
+            min-height: 100vh;
+            color: white;
+        }
+        .sidebar a {
+            color: #C6A86A;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            transition: all 0.3s;
+        }
+        .sidebar a:hover {
+            background: #2c2c2c;
+            color: #fff;
+        }
+        .sidebar a i {
+            margin-right: 10px;
+        }
+        .main-content {
+            padding: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #C6A86A;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 p-0 sidebar">
+                <div class="p-3 text-center border-bottom border-secondary">
+                    <h4 class="text-warning">Veema Events</h4>
+                    <small class="text-muted">Admin Panel</small>
+                </div>
+                <div class="mt-3">
+                    <a href="dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    <a href="products.html"><i class="bi bi-box"></i> Products</a>
+                    <a href="orders.html"><i class="bi bi-cart"></i> Orders</a>
+                    <a href="users.html"><i class="bi bi-people"></i> Users</a>
+                    <a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 main-content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Admin Dashboard</h2>
+                    <div>
+                        <span id="userEmail" class="me-3"></span>
+                        <button class="btn btn-dark btn-sm" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h6>Total Products</h6>
+                            <div class="stat-number" id="totalProducts">-</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h6>Total Orders</h6>
+                            <div class="stat-number" id="totalOrders">-</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h6>Total Users</h6>
+                            <div class="stat-number" id="totalUsers">-</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h6>Revenue</h6>
+                            <div class="stat-number" id="totalRevenue">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Welcome to your admin dashboard</h5>
+                            <p>Here you can manage products, view orders, and track sales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0D7OnPSrkF0fFrcdQnYpTJGIyGjUNlWU",
+            authDomain: "veema-events.firebaseapp.com",
+            projectId: "veema-events",
+            storageBucket: "veema-events.firebasestorage.app",
+            messagingSenderId: "933547953857",
+            appId: "1:933547953857:web:84fe2d92fb721763508e40"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const BACKEND_URL = window.ENV?.BACKEND_URL || 'https://veema-events-backend.railway.app';
+
+        // Check authentication and admin status
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            // Display user email
+            document.getElementById('userEmail').textContent = user.email;
+            
+            // Verify admin status with backend
+            const token = await user.getIdToken();
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/auth/is-admin`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (!data.isAdmin) {
+                    alert('Access denied. Admin privileges required.');
+                    window.location.href = '../index.html';
+                } else {
+                    // Load dashboard data
+                    loadDashboardStats();
+                }
+            } catch (error) {
+                console.error('Admin verification failed:', error);
+                window.location.href = '../index.html';
+            }
+        });
+
+        async function loadDashboardStats() {
+            try {
+                const token = await auth.currentUser.getIdToken();
+                
+                // Get products count
+                const productsRes = await fetch(`${BACKEND_URL}/api/products`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const products = await productsRes.json();
+                document.getElementById('totalProducts').textContent = products.products?.length || 0;
+                
+                // Get orders count
+                const ordersRes = await fetch(`${BACKEND_URL}/api/orders`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const orders = await ordersRes.json();
+                document.getElementById('totalOrders').textContent = orders.length || 0;
+                
+                // Get users count
+                const usersRes = await fetch(`${BACKEND_URL}/api/admin/users`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const users = await usersRes.json();
+                document.getElementById('totalUsers').textContent = users.length || 0;
+                
+                // Calculate total revenue
+                let revenue = 0;
+                if (orders.length) {
+                    revenue = orders.reduce((sum, order) => sum + (order.total_amount || 0), 0);
+                }
+                document.getElementById('totalRevenue').textContent = `Ksh ${revenue.toLocaleString()}`;
+                
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+                document.getElementById('totalProducts').textContent = 'Error';
+                document.getElementById('totalOrders').textContent = 'Error';
+                document.getElementById('totalUsers').textContent = 'Error';
+                document.getElementById('totalRevenue').textContent = 'Error';
+            }
+        }
+
+        async function logout() {
+            await auth.signOut();
+            window.location.href = '../login.html';
+        }
+    </script>
+</body>
+</html>
