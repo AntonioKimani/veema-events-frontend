@@ -8,35 +8,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-         .hero-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                url('assets/images/background.jpeg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    height: 80vh;
-    display: flex;
-    align-items: center;
-    color: white;
-    text-align: center;
-}
         body {
-            background-color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333333;
+            background-color: #F8F5EF;
+            font-family: 'Inter', sans-serif;
+            color: #2C2C2C;
         }
         .page-header {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: linear-gradient(135deg, #F8F5EF 0%, #E8E2D9 100%);
             padding: 40px 0;
             margin-bottom: 40px;
             border-bottom: 1px solid #e0e0e0;
         }
         .page-header h1 {
-            color: #333333;
+            color: #171717;
             font-weight: 700;
-        }
-        .page-header p {
-            color: #666666;
+            font-family: 'Cormorant Garamond', serif;
         }
         .product-card {
             border: 1px solid #e0e0e0;
@@ -52,7 +38,7 @@
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border-color: #C6A75E;
+            border-color: #C6A86A;
         }
         .product-image {
             width: 100%;
@@ -65,21 +51,27 @@
         .product-name {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #333333;
+            color: #171717;
             margin-bottom: 8px;
             min-height: 50px;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.85rem;
+            margin-right: 8px;
         }
         .product-price {
             font-weight: 700;
             font-size: 1.3rem;
-            color: #000000;
-            margin-bottom: 15px;
+            color: #C6A86A;
+            margin-bottom: 8px;
         }
         .featured-badge {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: #C6A75E;
+            background: #C6A86A;
             color: white;
             padding: 5px 12px;
             border-radius: 20px;
@@ -90,16 +82,16 @@
         .category-btn {
             margin: 5px;
             padding: 8px 20px;
-            border: 2px solid #C6A75E;
+            border: 2px solid #C6A86A;
             background: white;
-            color: #C6A75E;
+            color: #C6A86A;
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 500;
         }
         .category-btn:hover, .category-btn.active {
-            background: #C6A75E;
+            background: #C6A86A;
             color: white;
         }
         .stock-badge {
@@ -148,7 +140,7 @@
             color: #333;
         }
         .quantity-btn:hover {
-            background: #C6A75E;
+            background: #C6A86A;
             color: white;
         }
         .quantity-input {
@@ -167,12 +159,8 @@
             -webkit-appearance: none;
             margin: 0;
         }
-        .quantity-input:focus {
-            outline: none;
-            background-color: #fff9e6;
-        }
         .add-to-cart-btn {
-            background: #333333;
+            background: #171717;
             color: white;
             border: none;
             padding: 10px;
@@ -182,7 +170,7 @@
             width: 100%;
         }
         .add-to-cart-btn:hover {
-            background: #C6A75E;
+            background: #C6A86A;
         }
         .search-box {
             position: relative;
@@ -200,7 +188,7 @@
             color: #333;
         }
         .search-box input:focus {
-            border-color: #C6A75E;
+            border-color: #C6A86A;
             outline: none;
             box-shadow: 0 0 0 3px rgba(198,167,94,0.1);
         }
@@ -213,16 +201,17 @@
             font-size: 1.2rem;
         }
         .featured-section {
-            background: #f8f9fa;
+            background: #F8F5EF;
             padding: 40px 0;
             margin: 40px 0;
             border-top: 1px solid #e0e0e0;
             border-bottom: 1px solid #e0e0e0;
         }
         .featured-title {
-            color: #C6A75E;
+            color: #C6A86A;
             font-weight: 700;
             margin-bottom: 30px;
+            font-family: 'Cormorant Garamond', serif;
         }
         .product-count {
             color: #666;
@@ -300,180 +289,54 @@
     
     <script>
         // ============================================
-        // PRODUCT DATA - NETLIFY VERSION
+        // PRODUCT DATA - SYNCED WITH ADMIN PANEL
         // ============================================
         
-        // Correct path for Netlify
         const basePath = '/assets/images/';
         
-        const products = [
-            {
-                id: 1,
-                name: "Luxury Table Cloth - Gold",
-                price: 3500,
-                category: "Table Linens",
-                image: basePath + "tablecloth-gold.jpg",
-                stock: 25,
-                featured: true,
-                description: "Premium quality gold table cloth"
-            },
-            {
-                id: 2,
-                name: "Luxury Table Cloth - White",
-                price: 3500,
-                category: "Table Linens",
-                image: basePath + "tablecloth-white.jpg",
-                stock: 30,
-                featured: true,
-                description: "Elegant white table cloth"
-            },
-            {
-                id: 3,
-                name: "Premium Chair Ribbon - Burgundy",
-                price: 800,
-                category: "Ribbons",
-                image: basePath + "ribbon-burgundy.jpg",
-                stock: 100,
-                featured: true,
-                description: "Beautiful burgundy ribbons"
-            },
-            {
-                id: 4,
-                name: "Premium Chair Ribbon - Gold",
-                price: 850,
-                category: "Ribbons",
-                image: basePath + "ribbon-gold.jpg",
-                stock: 75,
-                featured: false,
-                description: "Metallic gold ribbons"
-            },
-            {
-                id: 5,
-                name: "Gold Charger Plate",
-                price: 450,
-                category: "Tableware",
-                image: basePath + "charger-gold.jpg",
-                stock: 200,
-                featured: true,
-                description: "Set of 6 gold charger plates"
-            },
-            {
-                id: 6,
-                name: "Crystal Centerpiece",
-                price: 2500,
-                category: "Decor",
-                image: basePath + "centerpiece-crystal.jpg",
-                stock: 15,
-                featured: true,
-                description: "Beautiful crystal centerpiece"
-            },
-            {
-                id: 7,
-                name: "Sequin Table Runner - Silver",
-                price: 1200,
-                category: "Table Linens",
-                image: basePath + "runner-sequin.jpg",
-                stock: 20,
-                featured: false,
-                description: "Sparkling silver sequin runner"
-            },
-            {
-                id: 9,
-                name: "Sage Green Balloons",
-                price: 250,
-                category: "Decor",
-                image: basePath + "balloons-sage.jpeg",
-                stock: 50,
-                featured: true,
-                description: "Pack of 100 sage green balloons"
-            },
-            {
-                id: 10,
-                name: "Seat Spandex Cover (Light)",
-                price: 245,
-                category: "Table Linens",
-                image: basePath + "spandex-cover.jpeg",
-                stock: 100,
-                featured: false,
-                description: "Light weight spandex cover"
-            },
-            {
-                id: 11,
-                name: "Seat Spandex Cover (Heavy)",
-                price: 380,
-                category: "Table Linens",
-                image: basePath + "spandex-cover.jpeg",
-                stock: 80,
-                featured: false,
-                description: "Heavy duty spandex cover"
-            },
-            {
-                id: 12,
-                name: "Cheese Table Runner",
-                price: 450,
-                category: "Table Linens",
-                image: basePath + "cheese-runner.jpeg",
-                stock: 40,
-                featured: true,
-                description: "Cheese pattern table runner"
-            },
-            {
-                id: 13,
-                name: "Tie Backs",
-                price: 80,
-                category: "Ribbons",
-                image: basePath + "tie-backs.jpeg",
-                stock: 200,
-                featured: false,
-                description: "Decorative tie backs"
-            },
-            {
-                id: 14,
-                name: "Gold Spiral Napkin Ring",
-                price: 100,
-                category: "Tableware",
-                image: basePath + "napring-gold-spiral.jpeg",
-                stock: 150,
-                featured: true,
-                description: "Gold spiral design napkin rings"
-            },
-            {
-                id: 15,
-                name: "Pearl Napkin Rings",
-                price: 150,
-                category: "Tableware",
-                image: basePath + "napring-pearl.jpeg",
-                stock: 120,
-                featured: false,
-                description: "Pearl embellished napkin rings"
-            },
-            {
-                id: 16,
-                name: "Butterfly Gold Napkin Ring",
-                price: 130,
-                category: "Tableware",
-                image: basePath + "napring-butterfly.jpeg",
-                stock: 100,
-                featured: true,
-                description: "Butterfly design gold napkin rings"
-            },
-            {
-                id: 17,
-                name: "Acrylic Gold Stand",
-                price: 5000,
-                category: "Decor",
-                image: basePath + "acrylic-stand.jpeg",
-                stock: 15,
-                featured: true,
-                description: "Acrylic gold stand for centerpieces"
-            }
-        ];
+        // Load products from localStorage (synced with admin)
+        let products = JSON.parse(localStorage.getItem('products')) || [];
+        
+        // If no products in localStorage, use default data
+        if (products.length === 0) {
+            products = [
+                { id: 1, name: "Luxury Table Cloth - Gold", originalPrice: 4500, price: 3500, category: "Table Linens", image: basePath + "tablecloth-gold.jpg", stock: 25, featured: true, description: "Premium quality gold table cloth" },
+                { id: 2, name: "Luxury Table Cloth - White", originalPrice: 4500, price: 3500, category: "Table Linens", image: basePath + "tablecloth-white.jpg", stock: 30, featured: true, description: "Elegant white table cloth" },
+                { id: 3, name: "Premium Chair Ribbon - Burgundy", originalPrice: 1000, price: 800, category: "Ribbons", image: basePath + "ribbon-burgundy.jpg", stock: 100, featured: true, description: "Beautiful burgundy ribbons" },
+                { id: 4, name: "Premium Chair Ribbon - Gold", originalPrice: 1000, price: 850, category: "Ribbons", image: basePath + "ribbon-gold.jpg", stock: 75, featured: false, description: "Metallic gold ribbons" },
+                { id: 5, name: "Gold Charger Plate", originalPrice: 600, price: 450, category: "Tableware", image: basePath + "charger-gold.jpg", stock: 200, featured: true, description: "Set of 6 gold charger plates" },
+                { id: 6, name: "Crystal Centerpiece", originalPrice: 3000, price: 2500, category: "Decor", image: basePath + "centerpiece-crystal.jpg", stock: 15, featured: true, description: "Beautiful crystal centerpiece" },
+                { id: 7, name: "Sequin Table Runner - Silver", originalPrice: 1500, price: 1200, category: "Table Linens", image: basePath + "runner-sequin.jpg", stock: 20, featured: false, description: "Sparkling silver sequin runner" },
+                { id: 9, name: "Sage Green Balloons", originalPrice: 300, price: 250, category: "Decor", image: basePath + "balloons-sage.jpeg", stock: 50, featured: true, description: "Pack of 100 sage green balloons" },
+                { id: 10, name: "Seat Spandex Cover (Light)", originalPrice: 300, price: 245, category: "Table Linens", image: basePath + "spandex-cover.jpeg", stock: 100, featured: false, description: "Light weight spandex cover" },
+                { id: 11, name: "Seat Spandex Cover (Heavy)", originalPrice: 450, price: 380, category: "Table Linens", image: basePath + "spandex-cover.jpeg", stock: 80, featured: false, description: "Heavy duty spandex cover" },
+                { id: 12, name: "Cheese Table Runner", originalPrice: 550, price: 450, category: "Table Linens", image: basePath + "cheese-runner.jpeg", stock: 40, featured: true, description: "Cheese pattern table runner" },
+                { id: 13, name: "Tie Backs", originalPrice: 100, price: 80, category: "Ribbons", image: basePath + "tie-backs.jpeg", stock: 200, featured: false, description: "Decorative tie backs" },
+                { id: 14, name: "Gold Spiral Napkin Ring", originalPrice: 150, price: 100, category: "Tableware", image: basePath + "napring-gold-spiral.jpeg", stock: 150, featured: true, description: "Gold spiral design napkin rings" },
+                { id: 15, name: "Pearl Napkin Rings", originalPrice: 200, price: 150, category: "Tableware", image: basePath + "napring-pearl.jpeg", stock: 120, featured: false, description: "Pearl embellished napkin rings" },
+                { id: 16, name: "Butterfly Gold Napkin Ring", originalPrice: 180, price: 130, category: "Tableware", image: basePath + "napring-butterfly.jpeg", stock: 100, featured: true, description: "Butterfly design gold napkin rings" },
+                { id: 17, name: "Acrylic Gold Stand", originalPrice: 6000, price: 5000, category: "Decor", image: basePath + "acrylic-stand.jpeg", stock: 15, featured: true, description: "Acrylic gold stand for centerpieces" }
+            ];
+            // Save to localStorage
+            localStorage.setItem('products', JSON.stringify(products));
+        }
 
         let currentProducts = [...products];
         let quantities = {};
 
         // Initialize quantities
         products.forEach(p => { quantities[p.id] = 1; });
+
+        // Listen for changes from admin panel
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'products') {
+                products = JSON.parse(e.newValue);
+                currentProducts = [...products];
+                displayProducts(currentProducts);
+                displayFeaturedProducts();
+                updateProductCount(currentProducts.length);
+            }
+        });
 
         // Display products on load
         document.addEventListener('DOMContentLoaded', function() {
@@ -511,10 +374,14 @@
                         <div class="product-card">
                             ${product.featured ? '<span class="featured-badge"><i class="bi bi-star-fill me-1"></i>Featured</span>' : ''}
                             <span class="stock-badge ${stockClass}">${stockText}</span>
-                            <img src="${product.image}" class="product-image" alt="${product.name}">
+                            <img src="${product.image}" class="product-image" alt="${product.name}"
+                                 onerror="this.src='${basePath}placeholder.jpg'">
                             <h5 class="product-name">${product.name}</h5>
-                            <p class="text-muted small mb-2">${product.description}</p>
-                            <div class="product-price">Ksh ${product.price.toLocaleString()}</div>
+                            <p class="text-muted small mb-2">${product.description || ''}</p>
+                            <div>
+                                ${product.originalPrice ? `<span class="original-price">Ksh ${product.originalPrice.toLocaleString()}</span>` : ''}
+                                <span class="product-price">Ksh ${product.price.toLocaleString()}</span>
+                            </div>
                             
                             <div class="quantity-control">
                                 <button class="quantity-btn" onclick="updateQuantity(${product.id}, -1)">−</button>
@@ -553,8 +420,11 @@
                             <span class="featured-badge"><i class="bi bi-star-fill me-1"></i>Special</span>
                             <img src="${product.image}" class="product-image" style="height: 150px;" alt="${product.name}">
                             <h6 class="fw-bold mt-2">${product.name}</h6>
-                            <div class="product-price" style="font-size: 1.1rem;">Ksh ${product.price.toLocaleString()}</div>
-                            <div class="quantity-control" style="max-width: 120px;">
+                            <div>
+                                ${product.originalPrice ? `<span class="original-price">Ksh ${product.originalPrice.toLocaleString()}</span>` : ''}
+                                <span style="color: #C6A86A; font-weight: bold;">Ksh ${product.price.toLocaleString()}</span>
+                            </div>
+                            <div class="quantity-control" style="max-width: 120px; margin-top: 10px;">
                                 <button class="quantity-btn" style="width: 30px; height: 30px;" onclick="updateQuantity(${product.id}, -1)">−</button>
                                 <input type="number" class="quantity-input" style="width: 40px; height: 30px;" 
                                        id="featured-qty-${product.id}" value="1" min="1" max="${product.stock}"
@@ -613,6 +483,10 @@
             const quantity = quantities[productId] || 1;
             
             if (!product) return;
+            if (product.stock < quantity) {
+                alert(`Only ${product.stock} items available.`);
+                return;
+            }
             
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             
@@ -705,12 +579,5 @@
                 .catch(e => console.log('Footer error:', e));
         }
     </script>
-    <script>
-    function handleLogout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = 'index.html';
-    }
-</script>
 </body>
 </html>
