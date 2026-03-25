@@ -3,39 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Products - Veema Events Admin</title>
+    <title>Admin Dashboard - Veema Events</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Same styles as before... */
         body { background: #F8F5EF; font-family: 'Inter', sans-serif; }
         .sidebar { background: #171717; min-height: 100vh; color: white; position: sticky; top: 0; }
         .sidebar a { color: #C6A86A; text-decoration: none; display: block; padding: 12px 20px; transition: all 0.3s; }
         .sidebar a:hover, .sidebar a.active { background: #2c2c2c; color: #fff; }
         .sidebar a i { margin-right: 10px; width: 25px; }
         .main-content { padding: 30px; }
-        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; transition: transform 0.2s; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .product-image { height: 180px; object-fit: cover; width: 100%; background: #f5f5f5; }
-        .btn-edit { background: #C6A86A; color: white; border: none; padding: 6px 12px; border-radius: 5px; margin-right: 5px; }
-        .btn-delete { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 5px; }
-        .btn-add { background: #171717; color: white; border: none; padding: 10px 20px; border-radius: 8px; }
-        .btn-add:hover { background: #C6A86A; color: #171717; }
-        .original-price { text-decoration: line-through; color: #999; font-size: 0.9rem; margin-right: 8px; }
-        .selling-price { color: #C6A86A; font-weight: bold; font-size: 1.1rem; }
-        .modal-content { border-radius: 15px; max-width: 800px; margin: 0 auto; }
-        .drop-zone { border: 2px dashed #ddd; border-radius: 12px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
-        .drop-zone:hover, .drop-zone.dragover { border-color: #C6A86A; background: #fef9e6; }
-        .drop-zone i { font-size: 3rem; color: #C6A86A; margin-bottom: 10px; }
-        .image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; margin: 5px; border: 2px solid #ddd; cursor: pointer; }
-        .image-preview:hover { border-color: #C6A86A; transform: scale(1.05); }
-        .image-preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
-        .color-tag { display: inline-block; width: 30px; height: 30px; border-radius: 50%; margin: 5px; cursor: pointer; border: 2px solid #ddd; transition: all 0.2s; }
-        .color-tag:hover { transform: scale(1.1); border-color: #C6A86A; }
-        .color-input-group { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .stat-card { background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-number { font-size: 2rem; font-weight: bold; color: #C6A86A; }
         .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 8px; }
-        .category-badge { display: inline-block; background: #e9ecef; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; }
-        .subcategory-badge { background: #f8f9fa; color: #666; }
+        .btn-logout:hover { background: #c82333; }
+        .btn-add { background: #171717; color: white; border: none; padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-block; transition: all 0.3s; }
+        .btn-add:hover { background: #C6A86A; color: #171717; transform: translateY(-2px); }
+        .recent-orders-table { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-top: 30px; }
+        .recent-orders-table th { background: #f8f9fa; padding: 15px; font-weight: 600; }
+        .recent-orders-table td { padding: 12px 15px; vertical-align: middle; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; display: inline-block; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-processing { background: #cce5ff; color: #004085; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .category-stats { background: white; border-radius: 12px; padding: 20px; margin-top: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .category-badge { display: inline-block; background: #e9ecef; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; margin: 3px; }
+        .category-count { font-weight: bold; color: #C6A86A; margin-left: 5px; }
+        .welcome-section { background: linear-gradient(135deg, #171717 0%, #2c2c2c 100%); border-radius: 15px; padding: 25px; margin-bottom: 30px; color: white; }
+        .admin-avatar { width: 50px; height: 50px; background: #C6A86A; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
     </style>
 </head>
 <body>
@@ -49,133 +46,165 @@
                     <small class="text-muted">Admin Panel</small>
                 </div>
                 <div class="mt-3">
-                    <a href="dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
-                    <a href="products.html" class="active"><i class="bi bi-box"></i> Products</a>
+                    <a href="dashboard.html" class="active">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                    <a href="products.html">
+                        <i class="bi bi-box"></i> Products
+                    </a>
+                    <a href="orders.html">
+                        <i class="bi bi-cart"></i> Orders
+                    </a>
+                    <a href="users.html">
+                        <i class="bi bi-people"></i> Users
+                    </a>
                     <hr class="mx-3 my-2 bg-secondary">
-                    <a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                    <a href="#" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
                 </div>
             </div>
 
             <!-- Main Content -->
             <div class="col-md-10 main-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Product Management</h2>
-                    <div>
-                        <span id="adminEmail" class="me-3 text-muted"></span>
-                        <button class="btn-logout" onclick="logout()">Logout</button>
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="admin-avatar">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0" id="adminName">Admin User</h4>
+                                <p class="mb-0 text-white-50" id="adminEmail">Loading...</p>
+                            </div>
+                        </div>
+                        <button class="btn-logout" onclick="logout()">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </button>
                     </div>
                 </div>
 
-                <button class="btn-add mb-4" onclick="openAddModal()">
-                    <i class="bi bi-plus-circle"></i> Add New Product
-                </button>
-
-                <div class="row" id="productsGrid">
-                    <div class="col-12 text-center py-5">
-                        <div class="spinner-border text-warning"></div>
+                <!-- Stats Cards -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="bi bi-box fs-1 text-warning mb-2 d-block"></i>
+                            <div class="stat-number" id="totalProducts">-</div>
+                            <div class="text-muted">Total Products</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="bi bi-cart fs-1 text-warning mb-2 d-block"></i>
+                            <div class="stat-number" id="totalOrders">0</div>
+                            <div class="text-muted">Total Orders</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="bi bi-people fs-1 text-warning mb-2 d-block"></i>
+                            <div class="stat-number" id="totalUsers">1</div>
+                            <div class="text-muted">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="bi bi-currency-dollar fs-1 text-warning mb-2 d-block"></i>
+                            <div class="stat-number" id="totalRevenue">Ksh 0</div>
+                            <div class="text-muted">Total Revenue</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Add/Edit Product Modal -->
-    <div class="modal fade" id="productModal" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Add Product</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <!-- Category Statistics -->
+                <div class="category-stats">
+                    <h5 class="fw-bold mb-3">Products by Category</h5>
+                    <div id="categoryStatsContainer" class="d-flex flex-wrap gap-2">
+                        <div class="spinner-border text-warning spinner-border-sm" role="status"></div>
+                        <span class="text-muted ms-2">Loading categories...</span>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <form id="productForm">
-                        <input type="hidden" id="productId">
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Product Name</label>
-                                <input type="text" class="form-control" id="productName" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Main Category</label>
-                                <select class="form-select" id="mainCategory" onchange="updateSubCategories()">
-                                    <option value="Chair Covers & Decor">Chair Covers & Decor</option>
-                                    <option value="Table Covers & Linens">Table Covers & Linens</option>
-                                    <option value="Tableware & Dining Accessories">Tableware & Dining Accessories</option>
-                                    <option value="Catering & Serving Equipment">Catering & Serving Equipment</option>
-                                    <option value="Decorations & Styling">Decorations & Styling</option>
-                                    <option value="Event Barriers & Crowd Control">Event Barriers & Crowd Control</option>
-                                    <option value="Specialty Decor">Specialty Decor</option>
-                                    <option value="Beverage Accessories">Beverage Accessories</option>
-                                    <option value="Furniture">Furniture</option>
-                                </select>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Sub Category</label>
-                                <select class="form-select" id="subCategory">
-                                    <option value="">Select sub-category...</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Stock Quantity</label>
-                                <input type="number" class="form-control" id="productStock" value="0">
-                            </div>
+                <!-- Quick Actions -->
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="stat-card text-center">
+                            <i class="bi bi-plus-circle fs-1 text-warning mb-3 d-block"></i>
+                            <h6>Add New Product</h6>
+                            <p class="text-muted small">Add products with colors, multiple images, and categories</p>
+                            <a href="products.html" class="btn-add">Go to Products</a>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Original Price (Ksh)</label>
-                                <input type="number" class="form-control" id="originalPrice" placeholder="Optional - for discounts">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Selling Price (Ksh)</label>
-                                <input type="number" class="form-control" id="sellingPrice" required>
-                            </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card text-center">
+                            <i class="bi bi-truck fs-1 text-warning mb-3 d-block"></i>
+                            <h6>Manage Orders</h6>
+                            <p class="text-muted small">View and update order statuses</p>
+                            <a href="orders.html" class="btn-add">View Orders</a>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-control" id="productDescription" rows="3"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card text-center">
+                            <i class="bi bi-bar-chart fs-1 text-warning mb-3 d-block"></i>
+                            <h6>View Reports</h6>
+                            <p class="text-muted small">See sales and inventory reports</p>
+                            <a href="#" class="btn-add" onclick="alert('Reports coming soon')">View Reports</a>
                         </div>
-
-                        <!-- Colors Section -->
-                        <div class="mb-3">
-                            <label class="form-label">Available Colors</label>
-                            <div id="colorsContainer">
-                                <div class="color-input-group">
-                                    <input type="text" class="form-control" placeholder="Color name (e.g., Gold, Silver, Rose Gold)" style="width: 200px;" id="colorNameInput">
-                                    <input type="color" class="form-control form-control-color" style="width: 60px;" id="colorValueInput" value="#C6A86A">
-                                    <button type="button" class="btn btn-sm btn-success" onclick="addColor()">+ Add</button>
-                                </div>
-                            </div>
-                            <div id="colorList" class="d-flex flex-wrap mt-2"></div>
-                            <small class="text-muted">Click on colors to remove them</small>
-                        </div>
-
-                        <!-- Multiple Images Section -->
-                        <div class="mb-3">
-                            <label class="form-label">Product Images (Multiple)</label>
-                            <div class="drop-zone" id="dropZone" onclick="document.getElementById('imageFiles').click()">
-                                <i class="bi bi-cloud-upload"></i>
-                                <p class="drag-drop-text">Drag & drop multiple images here or click to browse</p>
-                                <input type="file" id="imageFiles" accept="image/*" multiple style="display: none;" onchange="handleMultipleFiles(this)">
-                            </div>
-                            <div id="imagesPreview" class="image-preview-container"></div>
-                            <input type="hidden" id="productImages" value="[]">
-                        </div>
-
-                        <div class="form-check mb-3">
-                            <input type="checkbox" class="form-check-input" id="productFeatured">
-                            <label class="form-check-label">Featured Product</label>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-dark" onclick="saveProduct()">Save Product</button>
+
+                <!-- Recent Orders -->
+                <div class="recent-orders-table">
+                    <div class="p-3 border-bottom bg-white">
+                        <h5 class="mb-0 fw-bold">Recent Orders</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersTable">
+                                <tr>
+                                    <td colspan="6" class="text-center py-4 text-muted">No orders yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alert -->
+                <div class="recent-orders-table mt-4">
+                    <div class="p-3 border-bottom bg-white">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-exclamation-triangle text-warning"></i> Low Stock Alert
+                        </h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Current Stock</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lowStockTable">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">No low stock items</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -197,270 +226,18 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Sub-category mapping
-        const subCategories = {
-            "Chair Covers & Decor": ["Light Seat Spandex", "Heavy Seat Spandex", "Tie Backs"],
-            "Table Covers & Linens": [
-                "Jacquard Round Table Cloth - Small Print",
-                "Jacquard Round Table Cloth - New Print",
-                "Jacquard Rectangle Table Cloth - Small Print",
-                "Jacquard Rectangle Table Cloth - New Print",
-                "Chevron Table Cover",
-                "Overlay Table Cover",
-                "Jacquard Small Print - Napkins",
-                "Jacquard New Print - Napkins",
-                "Cheese Runner",
-                "Jacquard Runner",
-                "Sequin Runner"
-            ],
-            "Tableware & Dining Accessories": [
-                "Charger Plates",
-                "Wine Glasses - Plain Gold",
-                "Wine Glasses - Stripe Gold",
-                "Wine Glasses - Flowered Gold"
-            ],
-            "Catering & Serving Equipment": [
-                "Chafing Dishes - Round Designs",
-                "Chafing Dishes - Rectangle Designs",
-                "Chafing Dishes - Roll-Top / Flip-Top",
-                "Chafing Dishes - Decorative / Premium Styles"
-            ],
-            "Decorations & Styling": ["Ribbon Balloons", "Balloons", "Arches", "Center Pieces"],
-            "Event Barriers & Crowd Control": ["Stanchions"],
-            "Specialty Decor": ["Electric Fireplace - Vapor", "Electric Fireplace - 2D", "Electric Fireplace - Small"],
-            "Beverage Accessories": ["Wine Holders - Chain", "Wine Holders - Cart"],
-            "Furniture": ["Round Tables", "Rectangle Tables"]
-        };
-
-        function updateSubCategories() {
-            const mainCat = document.getElementById('mainCategory').value;
-            const subSelect = document.getElementById('subCategory');
-            subSelect.innerHTML = '<option value="">Select sub-category...</option>';
-            
-            if (subCategories[mainCat]) {
-                subCategories[mainCat].forEach(sub => {
-                    const option = document.createElement('option');
-                    option.value = sub;
-                    option.textContent = sub;
-                    subSelect.appendChild(option);
-                });
-            }
-        }
-
-        // Colors management
-        let colors = [];
-
-        function addColor() {
-            const name = document.getElementById('colorNameInput').value;
-            const value = document.getElementById('colorValueInput').value;
-            if (!name) {
-                alert('Please enter a color name');
-                return;
-            }
-            colors.push({ name, value });
-            updateColorList();
-            document.getElementById('colorNameInput').value = '';
-        }
-
-        function removeColor(index) {
-            colors.splice(index, 1);
-            updateColorList();
-        }
-
-        function updateColorList() {
-            const container = document.getElementById('colorList');
-            container.innerHTML = colors.map((color, i) => `
-                <div class="color-tag" style="background-color: ${color.value};" title="${color.name}" onclick="removeColor(${i})"></div>
-            `).join('');
-        }
-
-        // Multiple images management
-        let images = [];
-
-        const dropZone = document.getElementById('dropZone');
-        const imagesPreview = document.getElementById('imagesPreview');
-        const productImagesInput = document.getElementById('productImages');
-
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            const files = Array.from(e.dataTransfer.files);
-            handleFiles(files);
-        });
-
-        function handleMultipleFiles(input) {
-            const files = Array.from(input.files);
-            handleFiles(files);
-        }
-
-        function handleFiles(files) {
-            files.forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        images.push(e.target.result);
-                        updateImagesPreview();
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        function removeImage(index) {
-            images.splice(index, 1);
-            updateImagesPreview();
-        }
-
-        function updateImagesPreview() {
-            imagesPreview.innerHTML = images.map((img, i) => `
-                <div style="position: relative; display: inline-block;">
-                    <img src="${img}" class="image-preview">
-                    <button type="button" class="btn btn-sm btn-danger" style="position: absolute; top: -5px; right: -5px; border-radius: 50%; width: 20px; height: 20px; padding: 0; font-size: 10px;" onclick="removeImage(${i})">×</button>
-                </div>
-            `).join('');
-            productImagesInput.value = JSON.stringify(images);
-        }
-
-        // Product data storage
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-
-        function saveProductsToStorage() {
-            localStorage.setItem('products', JSON.stringify(products));
-            window.dispatchEvent(new StorageEvent('storage', { key: 'products', newValue: JSON.stringify(products) }));
-        }
-
-        function loadProducts() {
-            const grid = document.getElementById('productsGrid');
-            if (!products.length) {
-                grid.innerHTML = '<div class="col-12 text-center py-5">No products found. Click "Add New Product" to get started.</div>';
-                return;
-            }
-
-            let html = '';
-            products.forEach(product => {
-                const mainImage = product.images && product.images.length ? product.images[0] : '/assets/images/placeholder.jpg';
-                html += `
-                    <div class="col-md-4 col-lg-3 mb-4">
-                        <div class="product-card">
-                            <img src="${mainImage}" class="product-image" alt="${product.name}" onerror="this.src='/assets/images/placeholder.jpg'">
-                            <div class="p-3">
-                                <h6 class="fw-bold">${product.name}</h6>
-                                <div><span class="category-badge">${product.mainCategory}</span></div>
-                                ${product.subCategory ? `<div><span class="category-badge subcategory-badge">${product.subCategory}</span></div>` : ''}
-                                <div>
-                                    ${product.originalPrice ? `<span class="original-price">Ksh ${product.originalPrice.toLocaleString()}</span>` : ''}
-                                    <span class="selling-price">Ksh ${product.price.toLocaleString()}</span>
-                                </div>
-                                <div class="mt-1">
-                                    ${product.colors ? product.colors.map(c => `<span class="color-tag" style="background-color: ${c.value}; width: 20px; height: 20px; display: inline-block; border-radius: 50%; margin: 2px;" title="${c.name}"></span>`).join('') : ''}
-                                </div>
-                                <small class="text-muted">Stock: ${product.stock || 0}</small>
-                                ${product.featured ? '<span class="badge bg-warning text-dark mt-1 d-inline-block ms-2">Featured</span>' : ''}
-                                <div class="mt-2">
-                                    <button class="btn-edit" onclick="editProduct(${product.id})"><i class="bi bi-pencil"></i> Edit</button>
-                                    <button class="btn-delete" onclick="deleteProduct(${product.id})"><i class="bi bi-trash"></i> Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            grid.innerHTML = html;
-        }
-
-        function openAddModal() {
-            document.getElementById('modalTitle').textContent = 'Add Product';
-            document.getElementById('productForm').reset();
-            document.getElementById('productId').value = '';
-            colors = [];
-            images = [];
-            updateColorList();
-            updateImagesPreview();
-            updateSubCategories();
-            new bootstrap.Modal(document.getElementById('productModal')).show();
-        }
-
-        function editProduct(id) {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                document.getElementById('modalTitle').textContent = 'Edit Product';
-                document.getElementById('productId').value = product.id;
-                document.getElementById('productName').value = product.name;
-                document.getElementById('mainCategory').value = product.mainCategory;
-                updateSubCategories();
-                document.getElementById('subCategory').value = product.subCategory || '';
-                document.getElementById('originalPrice').value = product.originalPrice || '';
-                document.getElementById('sellingPrice').value = product.price;
-                document.getElementById('productDescription').value = product.description || '';
-                document.getElementById('productStock').value = product.stock || 0;
-                document.getElementById('productFeatured').checked = product.featured;
-                
-                colors = product.colors || [];
-                updateColorList();
-                
-                images = product.images || [];
-                updateImagesPreview();
-                
-                new bootstrap.Modal(document.getElementById('productModal')).show();
-            }
-        }
-
-        function saveProduct() {
-            const id = document.getElementById('productId').value;
-            const productData = {
-                name: document.getElementById('productName').value,
-                mainCategory: document.getElementById('mainCategory').value,
-                subCategory: document.getElementById('subCategory').value,
-                originalPrice: parseFloat(document.getElementById('originalPrice').value) || null,
-                price: parseFloat(document.getElementById('sellingPrice').value),
-                description: document.getElementById('productDescription').value,
-                stock: parseInt(document.getElementById('productStock').value) || 0,
-                featured: document.getElementById('productFeatured').checked,
-                colors: colors,
-                images: images
-            };
-
-            if (!productData.name || !productData.price) {
-                alert('Please fill in product name and price');
-                return;
-            }
-
-            if (id) {
-                const index = products.findIndex(p => p.id == id);
-                if (index !== -1) {
-                    products[index] = { ...products[index], ...productData };
-                }
-            } else {
-                const newId = Math.max(...products.map(p => p.id), 0) + 1;
-                products.push({ id: newId, ...productData });
-            }
-
-            saveProductsToStorage();
-            bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
-            loadProducts();
-            alert(id ? 'Product updated!' : 'Product added!');
-        }
-
-        function deleteProduct(id) {
-            if (confirm('Delete this product?')) {
-                const index = products.findIndex(p => p.id === id);
-                if (index !== -1) {
-                    products.splice(index, 1);
-                    saveProductsToStorage();
-                    loadProducts();
-                    alert('Product deleted!');
-                }
-            }
-        }
+        // Category mapping
+        const categories = [
+            "Chair Covers & Decor",
+            "Table Covers & Linens",
+            "Tableware & Dining Accessories",
+            "Catering & Serving Equipment",
+            "Decorations & Styling",
+            "Event Barriers & Crowd Control",
+            "Specialty Decor",
+            "Beverage Accessories",
+            "Furniture"
+        ];
 
         // Auth check
         auth.onAuthStateChanged(async (user) => {
@@ -468,15 +245,124 @@
                 window.location.href = '../login.html';
                 return;
             }
+            
             document.getElementById('adminEmail').textContent = user.email;
+            document.getElementById('adminName').textContent = user.displayName || user.email.split('@')[0];
+            
             const tokenResult = await user.getIdTokenResult();
             if (!tokenResult.claims.admin) {
                 alert('Admin access required');
                 window.location.href = '../index.html';
             } else {
-                loadProducts();
+                loadDashboardStats();
+                loadLowStockProducts();
+                loadRecentOrders();
             }
         });
+
+        function loadDashboardStats() {
+            // Load products from localStorage
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            document.getElementById('totalProducts').textContent = products.length || 0;
+            
+            // Calculate category statistics
+            const categoryCounts = {};
+            products.forEach(product => {
+                const cat = product.mainCategory || product.category;
+                if (cat) {
+                    categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+                }
+            });
+            
+            const categoryContainer = document.getElementById('categoryStatsContainer');
+            if (Object.keys(categoryCounts).length === 0) {
+                categoryContainer.innerHTML = '<span class="text-muted">No products yet. Add some products to see category distribution.</span>';
+            } else {
+                let html = '';
+                categories.forEach(cat => {
+                    const count = categoryCounts[cat] || 0;
+                    html += `<span class="category-badge">${cat} <span class="category-count">(${count})</span></span>`;
+                });
+                categoryContainer.innerHTML = html;
+            }
+        }
+
+        function loadLowStockProducts() {
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            const lowStock = products.filter(p => p.stock > 0 && p.stock < 10);
+            const tableBody = document.getElementById('lowStockTable');
+            
+            if (lowStock.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No low stock items</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            lowStock.forEach(product => {
+                const mainImage = product.images && product.images.length ? product.images[0] : '/assets/images/placeholder.jpg';
+                html += `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="${mainImage}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 5px;">
+                                <span class="fw-bold">${product.name}</span>
+                            </div>
+                        </td>
+                        <td>${product.mainCategory || product.category}</td>
+                        <td><span class="badge bg-danger">${product.stock}</span></td>
+                        <td><span class="status-badge status-pending">Low Stock</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-warning" onclick="window.location.href='products.html'">
+                                <i class="bi bi-plus-circle"></i> Restock
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tableBody.innerHTML = html;
+        }
+
+        function loadRecentOrders() {
+            // Sample orders for demo - replace with actual API call
+            const orders = [
+                { id: 'ORD-001', customer: 'Sarah Johnson', date: '2025-03-24', amount: 3500, status: 'completed' },
+                { id: 'ORD-002', customer: 'Mike Wanjala', date: '2025-03-23', amount: 4300, status: 'processing' },
+                { id: 'ORD-003', customer: 'Angela Mwende', date: '2025-03-22', amount: 800, status: 'pending' }
+            ];
+            
+            const tableBody = document.getElementById('recentOrdersTable');
+            if (orders.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No orders yet</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            orders.forEach(order => {
+                let statusClass = '';
+                switch(order.status) {
+                    case 'completed': statusClass = 'status-completed'; break;
+                    case 'processing': statusClass = 'status-processing'; break;
+                    case 'pending': statusClass = 'status-pending'; break;
+                    default: statusClass = 'status-pending';
+                }
+                
+                html += `
+                    <tr>
+                        <td><span class="fw-bold">#${order.id}</span></td>
+                        <td>${order.customer}</td>
+                        <td>${new Date(order.date).toLocaleDateString()}</td>
+                        <td>Ksh ${order.amount.toLocaleString()}</td>
+                        <td><span class="status-badge ${statusClass}">${order.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-dark" onclick="alert('View order ${order.id}')">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tableBody.innerHTML = html;
+        }
 
         async function logout() {
             await auth.signOut();
