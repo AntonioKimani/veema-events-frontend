@@ -31,7 +31,6 @@
         .image-preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
         .color-tag { display: inline-block; width: 30px; height: 30px; border-radius: 50%; margin: 5px; cursor: pointer; border: 2px solid #ddd; transition: all 0.2s; }
         .color-tag:hover { transform: scale(1.1); border-color: #C6A86A; }
-        .color-tag.selected { border-color: #C6A86A; box-shadow: 0 0 0 2px white, 0 0 0 4px #C6A86A; }
         .color-input-group { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
         .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 8px; }
         .category-badge { display: inline-block; background: #e9ecef; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; }
@@ -197,7 +196,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Sub-category mapping - UPDATED
+        // Sub-category mapping
         const subCategories = {
             "Chair Covers & Decor": ["Light Seat Spandex", "Heavy Seat Spandex", "Tie Backs"],
             "Table Covers & Linens": [
@@ -354,7 +353,7 @@
                             <img src="${mainImage}" class="product-image" alt="${product.name}" onerror="this.src='/assets/images/placeholder.jpg'">
                             <div class="p-3">
                                 <h6 class="fw-bold">${product.name}</h6>
-                                <div><span class="category-badge">${product.mainCategory}</span></div>
+                                <div><span class="category-badge">${product.mainCategory || product.category}</span></div>
                                 ${product.subCategory ? `<div><span class="category-badge subcategory-badge">${product.subCategory}</span></div>` : ''}
                                 <div>
                                     ${product.originalPrice ? `<span class="original-price">Ksh ${product.originalPrice.toLocaleString()}</span>` : ''}
@@ -395,7 +394,7 @@
                 document.getElementById('modalTitle').textContent = 'Edit Product';
                 document.getElementById('productId').value = product.id;
                 document.getElementById('productName').value = product.name;
-                document.getElementById('mainCategory').value = product.mainCategory;
+                document.getElementById('mainCategory').value = product.mainCategory || product.category;
                 updateSubCategories();
                 document.getElementById('subCategory').value = product.subCategory || '';
                 document.getElementById('originalPrice').value = product.originalPrice || '';
