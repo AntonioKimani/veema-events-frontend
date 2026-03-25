@@ -13,7 +13,7 @@
         .sidebar a:hover, .sidebar a.active { background: #2c2c2c; color: #fff; }
         .sidebar a i { margin-right: 10px; width: 25px; }
         .main-content { padding: 30px; }
-        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; transition: transform 0.2s; cursor: pointer; }
+        .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; transition: transform 0.2s; }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
         .product-image { height: 180px; object-fit: cover; width: 100%; background: #f5f5f5; }
         .btn-edit { background: #C6A86A; color: white; border: none; padding: 6px 12px; border-radius: 5px; margin-right: 5px; }
@@ -22,12 +22,20 @@
         .btn-add:hover { background: #C6A86A; color: #171717; }
         .original-price { text-decoration: line-through; color: #999; font-size: 0.9rem; margin-right: 8px; }
         .selling-price { color: #C6A86A; font-weight: bold; font-size: 1.1rem; }
-        .modal-content { border-radius: 15px; }
+        .modal-content { border-radius: 15px; max-width: 800px; margin: 0 auto; }
         .drop-zone { border: 2px dashed #ddd; border-radius: 12px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
         .drop-zone:hover, .drop-zone.dragover { border-color: #C6A86A; background: #fef9e6; }
         .drop-zone i { font-size: 3rem; color: #C6A86A; margin-bottom: 10px; }
-        .image-preview { max-width: 150px; max-height: 150px; border-radius: 8px; margin-top: 10px; }
+        .image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; margin: 5px; border: 2px solid #ddd; cursor: pointer; }
+        .image-preview:hover { border-color: #C6A86A; transform: scale(1.05); }
+        .image-preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .color-tag { display: inline-block; width: 30px; height: 30px; border-radius: 50%; margin: 5px; cursor: pointer; border: 2px solid #ddd; transition: all 0.2s; }
+        .color-tag:hover { transform: scale(1.1); border-color: #C6A86A; }
+        .color-tag.selected { border-color: #C6A86A; box-shadow: 0 0 0 2px white, 0 0 0 4px #C6A86A; }
+        .color-input-group { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
         .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 8px; }
+        .category-badge { display: inline-block; background: #e9ecef; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; margin-right: 5px; }
+        .subcategory-badge { background: #f8f9fa; color: #666; }
     </style>
 </head>
 <body>
@@ -73,7 +81,7 @@
 
     <!-- Add/Edit Product Modal -->
     <div class="modal fade" id="productModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalTitle">Add Product</h5>
@@ -82,21 +90,41 @@
                 <div class="modal-body">
                     <form id="productForm">
                         <input type="hidden" id="productId">
+                        
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Product Name</label>
                                 <input type="text" class="form-control" id="productName" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Category</label>
-                                <select class="form-select" id="productCategory">
-                                    <option>Table Linens</option>
-                                    <option>Ribbons</option>
-                                    <option>Tableware</option>
-                                    <option>Decor</option>
+                                <label class="form-label">Main Category</label>
+                                <select class="form-select" id="mainCategory" onchange="updateSubCategories()">
+                                    <option value="Chair Covers & Decor">Chair Covers & Decor</option>
+                                    <option value="Table Covers & Linens">Table Covers & Linens</option>
+                                    <option value="Tableware & Dining Accessories">Tableware & Dining Accessories</option>
+                                    <option value="Catering & Serving Equipment">Catering & Serving Equipment</option>
+                                    <option value="Decorations & Styling">Decorations & Styling</option>
+                                    <option value="Event Barriers & Crowd Control">Event Barriers & Crowd Control</option>
+                                    <option value="Specialty Decor">Specialty Decor</option>
+                                    <option value="Beverage Accessories">Beverage Accessories</option>
+                                    <option value="Furniture">Furniture</option>
                                 </select>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Sub Category</label>
+                                <select class="form-select" id="subCategory">
+                                    <option value="">Select sub-category...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Stock Quantity</label>
+                                <input type="number" class="form-control" id="productStock" value="0">
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Original Price (Ksh)</label>
@@ -104,31 +132,45 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Selling Price (Ksh)</label>
-                                <input type="number" class="form-control" id="sellingPrice" required placeholder="Required">
+                                <input type="number" class="form-control" id="sellingPrice" required>
                             </div>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label">Description</label>
                             <textarea class="form-control" id="productDescription" rows="3"></textarea>
                         </div>
+
+                        <!-- Colors Section -->
                         <div class="mb-3">
-                            <label class="form-label">Stock Quantity</label>
-                            <input type="number" class="form-control" id="productStock" value="0">
+                            <label class="form-label">Available Colors</label>
+                            <div id="colorsContainer">
+                                <div class="color-input-group">
+                                    <input type="text" class="form-control" placeholder="Color name (e.g., Gold, Silver, Rose Gold)" style="width: 200px;" id="colorNameInput">
+                                    <input type="color" class="form-control form-control-color" style="width: 60px;" id="colorValueInput" value="#C6A86A">
+                                    <button type="button" class="btn btn-sm btn-success" onclick="addColor()">+ Add</button>
+                                </div>
+                            </div>
+                            <div id="colorList" class="d-flex flex-wrap mt-2"></div>
+                            <small class="text-muted">Click on colors to remove them</small>
                         </div>
+
+                        <!-- Multiple Images Section -->
+                        <div class="mb-3">
+                            <label class="form-label">Product Images (Multiple)</label>
+                            <div class="drop-zone" id="dropZone" onclick="document.getElementById('imageFiles').click()">
+                                <i class="bi bi-cloud-upload"></i>
+                                <p class="drag-drop-text">Drag & drop multiple images here or click to browse</p>
+                                <input type="file" id="imageFiles" accept="image/*" multiple style="display: none;" onchange="handleMultipleFiles(this)">
+                            </div>
+                            <div id="imagesPreview" class="image-preview-container"></div>
+                            <input type="hidden" id="productImages" value="[]">
+                        </div>
+
                         <div class="form-check mb-3">
                             <input type="checkbox" class="form-check-input" id="productFeatured">
                             <label class="form-check-label">Featured Product</label>
                         </div>
-
-                        <!-- Drag & Drop Image Upload -->
-                        <label class="form-label">Product Image</label>
-                        <div class="drop-zone" id="dropZone" onclick="document.getElementById('imageFile').click()">
-                            <i class="bi bi-cloud-upload"></i>
-                            <p class="drag-drop-text">Drag & drop an image here or click to browse</p>
-                            <input type="file" id="imageFile" accept="image/*" style="display: none;" onchange="handleFileSelect(this)">
-                            <div id="imagePreview"></div>
-                        </div>
-                        <input type="hidden" id="productImage" value="/assets/images/placeholder.jpg">
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -155,10 +197,89 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Drag & Drop Image Upload
+        // Sub-category mapping - UPDATED
+        const subCategories = {
+            "Chair Covers & Decor": ["Light Seat Spandex", "Heavy Seat Spandex", "Tie Backs"],
+            "Table Covers & Linens": [
+                "Jacquard Round Table Cloth - Small Print",
+                "Jacquard Round Table Cloth - New Print",
+                "Jacquard Rectangle Table Cloth - Small Print",
+                "Jacquard Rectangle Table Cloth - New Print",
+                "Chevron Table Cover",
+                "Overlay Table Cover",
+                "Jacquard Small Print - Napkins",
+                "Jacquard New Print - Napkins",
+                "Cheese Runner",
+                "Jacquard Runner",
+                "Sequin Runner"
+            ],
+            "Tableware & Dining Accessories": [
+                "Charger Plates",
+                "Wine Glasses - Plain Gold",
+                "Wine Glasses - Stripe Gold",
+                "Wine Glasses - Flowered Gold"
+            ],
+            "Catering & Serving Equipment": [
+                "Chafing Dishes - Round Designs",
+                "Chafing Dishes - Rectangle Designs",
+                "Chafing Dishes - Roll-Top / Flip-Top",
+                "Chafing Dishes - Decorative / Premium Styles"
+            ],
+            "Decorations & Styling": ["Ribbon Balloons", "Balloons", "Arches", "Center Pieces"],
+            "Event Barriers & Crowd Control": ["Stanchions"],
+            "Specialty Decor": ["Electric Fireplace - Vapor", "Electric Fireplace - 2D", "Electric Fireplace - Small"],
+            "Beverage Accessories": ["Wine Holders - Chain", "Wine Holders - Cart"],
+            "Furniture": ["Round Tables", "Rectangle Tables"]
+        };
+
+        function updateSubCategories() {
+            const mainCat = document.getElementById('mainCategory').value;
+            const subSelect = document.getElementById('subCategory');
+            subSelect.innerHTML = '<option value="">Select sub-category...</option>';
+            
+            if (subCategories[mainCat]) {
+                subCategories[mainCat].forEach(sub => {
+                    const option = document.createElement('option');
+                    option.value = sub;
+                    option.textContent = sub;
+                    subSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Colors management
+        let colors = [];
+
+        function addColor() {
+            const name = document.getElementById('colorNameInput').value;
+            const value = document.getElementById('colorValueInput').value;
+            if (!name) {
+                alert('Please enter a color name');
+                return;
+            }
+            colors.push({ name, value });
+            updateColorList();
+            document.getElementById('colorNameInput').value = '';
+        }
+
+        function removeColor(index) {
+            colors.splice(index, 1);
+            updateColorList();
+        }
+
+        function updateColorList() {
+            const container = document.getElementById('colorList');
+            container.innerHTML = colors.map((color, i) => `
+                <div class="color-tag" style="background-color: ${color.value};" title="${color.name}" onclick="removeColor(${i})"></div>
+            `).join('');
+        }
+
+        // Multiple images management
+        let images = [];
+
         const dropZone = document.getElementById('dropZone');
-        const imagePreviewDiv = document.getElementById('imagePreview');
-        const productImageInput = document.getElementById('productImage');
+        const imagesPreview = document.getElementById('imagesPreview');
+        const productImagesInput = document.getElementById('productImages');
 
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -172,33 +293,48 @@
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                handleImageFile(file);
-            }
+            const files = Array.from(e.dataTransfer.files);
+            handleFiles(files);
         });
 
-        function handleFileSelect(input) {
-            const file = input.files[0];
-            if (file) handleImageFile(file);
+        function handleMultipleFiles(input) {
+            const files = Array.from(input.files);
+            handleFiles(files);
         }
 
-        function handleImageFile(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const imgData = e.target.result;
-                imagePreviewDiv.innerHTML = `<img src="${imgData}" class="image-preview">`;
-                productImageInput.value = imgData;
-            };
-            reader.readAsDataURL(file);
+        function handleFiles(files) {
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        images.push(e.target.result);
+                        updateImagesPreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
         }
 
-        // Product data (stored in localStorage, synced with frontend)
+        function removeImage(index) {
+            images.splice(index, 1);
+            updateImagesPreview();
+        }
+
+        function updateImagesPreview() {
+            imagesPreview.innerHTML = images.map((img, i) => `
+                <div style="position: relative; display: inline-block;">
+                    <img src="${img}" class="image-preview">
+                    <button type="button" class="btn btn-sm btn-danger" style="position: absolute; top: -5px; right: -5px; border-radius: 50%; width: 20px; height: 20px; padding: 0; font-size: 10px;" onclick="removeImage(${i})">×</button>
+                </div>
+            `).join('');
+            productImagesInput.value = JSON.stringify(images);
+        }
+
+        // Product data storage
         let products = JSON.parse(localStorage.getItem('products')) || [];
 
         function saveProductsToStorage() {
             localStorage.setItem('products', JSON.stringify(products));
-            // Dispatch event to notify other tabs
             window.dispatchEvent(new StorageEvent('storage', { key: 'products', newValue: JSON.stringify(products) }));
         }
 
@@ -211,19 +347,24 @@
 
             let html = '';
             products.forEach(product => {
+                const mainImage = product.images && product.images.length ? product.images[0] : '/assets/images/placeholder.jpg';
                 html += `
                     <div class="col-md-4 col-lg-3 mb-4">
                         <div class="product-card">
-                            <img src="${product.image}" class="product-image" alt="${product.name}" onerror="this.src='/assets/images/placeholder.jpg'">
+                            <img src="${mainImage}" class="product-image" alt="${product.name}" onerror="this.src='/assets/images/placeholder.jpg'">
                             <div class="p-3">
                                 <h6 class="fw-bold">${product.name}</h6>
-                                <p class="text-muted small">${product.category}</p>
+                                <div><span class="category-badge">${product.mainCategory}</span></div>
+                                ${product.subCategory ? `<div><span class="category-badge subcategory-badge">${product.subCategory}</span></div>` : ''}
                                 <div>
                                     ${product.originalPrice ? `<span class="original-price">Ksh ${product.originalPrice.toLocaleString()}</span>` : ''}
                                     <span class="selling-price">Ksh ${product.price.toLocaleString()}</span>
                                 </div>
+                                <div class="mt-1">
+                                    ${product.colors ? product.colors.map(c => `<span class="color-tag" style="background-color: ${c.value}; width: 20px; height: 20px; display: inline-block; border-radius: 50%; margin: 2px;" title="${c.name}"></span>`).join('') : ''}
+                                </div>
                                 <small class="text-muted">Stock: ${product.stock || 0}</small>
-                                ${product.featured ? '<span class="badge bg-warning text-dark mt-1 d-inline-block">Featured</span>' : ''}
+                                ${product.featured ? '<span class="badge bg-warning text-dark mt-1 d-inline-block ms-2">Featured</span>' : ''}
                                 <div class="mt-2">
                                     <button class="btn-edit" onclick="editProduct(${product.id})"><i class="bi bi-pencil"></i> Edit</button>
                                     <button class="btn-delete" onclick="deleteProduct(${product.id})"><i class="bi bi-trash"></i> Delete</button>
@@ -240,8 +381,11 @@
             document.getElementById('modalTitle').textContent = 'Add Product';
             document.getElementById('productForm').reset();
             document.getElementById('productId').value = '';
-            document.getElementById('imagePreview').innerHTML = '';
-            document.getElementById('productImage').value = '/assets/images/placeholder.jpg';
+            colors = [];
+            images = [];
+            updateColorList();
+            updateImagesPreview();
+            updateSubCategories();
             new bootstrap.Modal(document.getElementById('productModal')).show();
         }
 
@@ -251,18 +395,21 @@
                 document.getElementById('modalTitle').textContent = 'Edit Product';
                 document.getElementById('productId').value = product.id;
                 document.getElementById('productName').value = product.name;
+                document.getElementById('mainCategory').value = product.mainCategory;
+                updateSubCategories();
+                document.getElementById('subCategory').value = product.subCategory || '';
                 document.getElementById('originalPrice').value = product.originalPrice || '';
                 document.getElementById('sellingPrice').value = product.price;
-                document.getElementById('productCategory').value = product.category;
                 document.getElementById('productDescription').value = product.description || '';
                 document.getElementById('productStock').value = product.stock || 0;
                 document.getElementById('productFeatured').checked = product.featured;
-                document.getElementById('productImage').value = product.image;
-                if (product.image && !product.image.startsWith('data:')) {
-                    document.getElementById('imagePreview').innerHTML = `<img src="${product.image}" class="image-preview">`;
-                } else if (product.image && product.image.startsWith('data:')) {
-                    document.getElementById('imagePreview').innerHTML = `<img src="${product.image}" class="image-preview">`;
-                }
+                
+                colors = product.colors || [];
+                updateColorList();
+                
+                images = product.images || [];
+                updateImagesPreview();
+                
                 new bootstrap.Modal(document.getElementById('productModal')).show();
             }
         }
@@ -271,13 +418,15 @@
             const id = document.getElementById('productId').value;
             const productData = {
                 name: document.getElementById('productName').value,
+                mainCategory: document.getElementById('mainCategory').value,
+                subCategory: document.getElementById('subCategory').value,
                 originalPrice: parseFloat(document.getElementById('originalPrice').value) || null,
                 price: parseFloat(document.getElementById('sellingPrice').value),
-                category: document.getElementById('productCategory').value,
                 description: document.getElementById('productDescription').value,
                 stock: parseInt(document.getElementById('productStock').value) || 0,
                 featured: document.getElementById('productFeatured').checked,
-                image: document.getElementById('productImage').value
+                colors: colors,
+                images: images
             };
 
             if (!productData.name || !productData.price) {
@@ -298,17 +447,17 @@
             saveProductsToStorage();
             bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
             loadProducts();
-            alert(id ? 'Product updated successfully!' : 'Product added successfully!');
+            alert(id ? 'Product updated!' : 'Product added!');
         }
 
         function deleteProduct(id) {
-            if (confirm('Delete this product? This action cannot be undone.')) {
+            if (confirm('Delete this product?')) {
                 const index = products.findIndex(p => p.id === id);
                 if (index !== -1) {
                     products.splice(index, 1);
                     saveProductsToStorage();
                     loadProducts();
-                    alert('Product deleted successfully!');
+                    alert('Product deleted!');
                 }
             }
         }

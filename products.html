@@ -94,6 +94,32 @@
             background: #C6A86A;
             color: white;
         }
+        .category-badge {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .subcategory-badge {
+            background: #f8f9fa;
+            color: #666;
+        }
+        .color-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 2px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .color-dot:hover {
+            transform: scale(1.1);
+            border-color: #C6A86A;
+        }
         .stock-badge {
             position: absolute;
             top: 10px;
@@ -223,6 +249,23 @@
             padding: 60px;
             color: #999;
         }
+        .thumbnail-container {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+        .thumbnail-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .thumbnail-img:hover, .thumbnail-img.active {
+            border-color: #C6A86A;
+        }
     </style>
 </head>
 <body>
@@ -248,13 +291,18 @@
             </div>
         </div>
 
-        <!-- Category Filters -->
+        <!-- Category Filters - ALL 9 CATEGORIES -->
         <div class="text-center mb-4">
             <button class="category-btn active" onclick="filterProducts('all')">All</button>
-            <button class="category-btn" onclick="filterProducts('Table Linens')">Table Linens</button>
-            <button class="category-btn" onclick="filterProducts('Ribbons')">Ribbons</button>
-            <button class="category-btn" onclick="filterProducts('Tableware')">Tableware</button>
-            <button class="category-btn" onclick="filterProducts('Decor')">Decor</button>
+            <button class="category-btn" onclick="filterProducts('Chair Covers & Decor')">Chair Covers</button>
+            <button class="category-btn" onclick="filterProducts('Table Covers & Linens')">Table Linens</button>
+            <button class="category-btn" onclick="filterProducts('Tableware & Dining Accessories')">Tableware</button>
+            <button class="category-btn" onclick="filterProducts('Catering & Serving Equipment')">Catering</button>
+            <button class="category-btn" onclick="filterProducts('Decorations & Styling')">Decorations</button>
+            <button class="category-btn" onclick="filterProducts('Event Barriers & Crowd Control')">Barriers</button>
+            <button class="category-btn" onclick="filterProducts('Specialty Decor')">Specialty</button>
+            <button class="category-btn" onclick="filterProducts('Beverage Accessories')">Beverage</button>
+            <button class="category-btn" onclick="filterProducts('Furniture')">Furniture</button>
             <button class="category-btn" onclick="filterProducts('Featured')">Featured</button>
         </div>
 
@@ -297,27 +345,57 @@
         // Load products from localStorage (synced with admin)
         let products = JSON.parse(localStorage.getItem('products')) || [];
         
-        // If no products in localStorage, use default data
+        // If no products in localStorage, use default data with ALL categories
         if (products.length === 0) {
             products = [
-                { id: 1, name: "Luxury Table Cloth - Gold", originalPrice: 4500, price: 3500, category: "Table Linens", image: basePath + "tablecloth-gold.jpg", stock: 25, featured: true, description: "Premium quality gold table cloth" },
-                { id: 2, name: "Luxury Table Cloth - White", originalPrice: 4500, price: 3500, category: "Table Linens", image: basePath + "tablecloth-white.jpg", stock: 30, featured: true, description: "Elegant white table cloth" },
-                { id: 3, name: "Premium Chair Ribbon - Burgundy", originalPrice: 1000, price: 800, category: "Ribbons", image: basePath + "ribbon-burgundy.jpg", stock: 100, featured: true, description: "Beautiful burgundy ribbons" },
-                { id: 4, name: "Premium Chair Ribbon - Gold", originalPrice: 1000, price: 850, category: "Ribbons", image: basePath + "ribbon-gold.jpg", stock: 75, featured: false, description: "Metallic gold ribbons" },
-                { id: 5, name: "Gold Charger Plate", originalPrice: 600, price: 450, category: "Tableware", image: basePath + "charger-gold.jpg", stock: 200, featured: true, description: "Set of 6 gold charger plates" },
-                { id: 6, name: "Crystal Centerpiece", originalPrice: 3000, price: 2500, category: "Decor", image: basePath + "centerpiece-crystal.jpg", stock: 15, featured: true, description: "Beautiful crystal centerpiece" },
-                { id: 7, name: "Sequin Table Runner - Silver", originalPrice: 1500, price: 1200, category: "Table Linens", image: basePath + "runner-sequin.jpg", stock: 20, featured: false, description: "Sparkling silver sequin runner" },
-                { id: 9, name: "Sage Green Balloons", originalPrice: 300, price: 250, category: "Decor", image: basePath + "balloons-sage.jpeg", stock: 50, featured: true, description: "Pack of 100 sage green balloons" },
-                { id: 10, name: "Seat Spandex Cover (Light)", originalPrice: 300, price: 245, category: "Table Linens", image: basePath + "spandex-cover.jpeg", stock: 100, featured: false, description: "Light weight spandex cover" },
-                { id: 11, name: "Seat Spandex Cover (Heavy)", originalPrice: 450, price: 380, category: "Table Linens", image: basePath + "spandex-cover.jpeg", stock: 80, featured: false, description: "Heavy duty spandex cover" },
-                { id: 12, name: "Cheese Table Runner", originalPrice: 550, price: 450, category: "Table Linens", image: basePath + "cheese-runner.jpeg", stock: 40, featured: true, description: "Cheese pattern table runner" },
-                { id: 13, name: "Tie Backs", originalPrice: 100, price: 80, category: "Ribbons", image: basePath + "tie-backs.jpeg", stock: 200, featured: false, description: "Decorative tie backs" },
-                { id: 14, name: "Gold Spiral Napkin Ring", originalPrice: 150, price: 100, category: "Tableware", image: basePath + "napring-gold-spiral.jpeg", stock: 150, featured: true, description: "Gold spiral design napkin rings" },
-                { id: 15, name: "Pearl Napkin Rings", originalPrice: 200, price: 150, category: "Tableware", image: basePath + "napring-pearl.jpeg", stock: 120, featured: false, description: "Pearl embellished napkin rings" },
-                { id: 16, name: "Butterfly Gold Napkin Ring", originalPrice: 180, price: 130, category: "Tableware", image: basePath + "napring-butterfly.jpeg", stock: 100, featured: true, description: "Butterfly design gold napkin rings" },
-                { id: 17, name: "Acrylic Gold Stand", originalPrice: 6000, price: 5000, category: "Decor", image: basePath + "acrylic-stand.jpeg", stock: 15, featured: true, description: "Acrylic gold stand for centerpieces" }
+                // Chair Covers & Decor
+                { id: 1, name: "Light Seat Spandex", originalPrice: 450, price: 350, mainCategory: "Chair Covers & Decor", subCategory: "Light Seat Spandex", images: [basePath + "spandex-cover.jpeg"], stock: 100, featured: true, description: "Light weight spandex seat cover", colors: [{name:"White",value:"#FFFFFF"},{name:"Black",value:"#000000"},{name:"Gold",value:"#C6A86A"}] },
+                { id: 2, name: "Heavy Seat Spandex", originalPrice: 550, price: 450, mainCategory: "Chair Covers & Decor", subCategory: "Heavy Seat Spandex", images: [basePath + "spandex-cover.jpeg"], stock: 80, featured: true, description: "Heavy duty spandex seat cover" },
+                { id: 3, name: "Tie Backs", originalPrice: 120, price: 80, mainCategory: "Chair Covers & Decor", subCategory: "Tie Backs", images: [basePath + "tie-backs.jpeg"], stock: 200, featured: false, description: "Decorative tie backs" },
+                
+                // Table Covers & Linens
+                { id: 4, name: "Jacquard Round Table Cloth - Gold", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth - Small Print", images: [basePath + "tablecloth-gold.jpg"], stock: 25, featured: true, description: "Premium gold jacquard table cloth" },
+                { id: 5, name: "Jacquard Round Table Cloth - White", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth - New Print", images: [basePath + "tablecloth-white.jpg"], stock: 30, featured: true, description: "Elegant white jacquard table cloth" },
+                { id: 6, name: "Chevron Table Cover", originalPrice: 3800, price: 3000, mainCategory: "Table Covers & Linens", subCategory: "Chevron Table Cover", images: [basePath + "chevron-cover.jpg"], stock: 20, featured: false, description: "Modern chevron pattern table cover" },
+                { id: 7, name: "Overlay Table Cover", originalPrice: 2500, price: 1800, mainCategory: "Table Covers & Linens", subCategory: "Overlay Table Cover", images: [basePath + "overlay-cover.jpg"], stock: 40, featured: false, description: "Elegant overlay table cover" },
+                { id: 8, name: "Cheese Runner", originalPrice: 550, price: 450, mainCategory: "Table Covers & Linens", subCategory: "Cheese Runner", images: [basePath + "cheese-runner.jpeg"], stock: 40, featured: true, description: "Cheese pattern table runner" },
+                { id: 9, name: "Jacquard Runner", originalPrice: 650, price: 500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Runner", images: [basePath + "jacquard-runner.jpg"], stock: 35, featured: false, description: "Elegant jacquard table runner" },
+                { id: 10, name: "Sequin Runner", originalPrice: 1500, price: 1200, mainCategory: "Table Covers & Linens", subCategory: "Sequin Runner", images: [basePath + "runner-sequin.jpg"], stock: 20, featured: false, description: "Sparkling sequin table runner" },
+                
+                // Tableware & Dining Accessories
+                { id: 11, name: "Gold Charger Plate", originalPrice: 600, price: 450, mainCategory: "Tableware & Dining Accessories", subCategory: "Charger Plates", images: [basePath + "charger-gold.jpg"], stock: 200, featured: true, description: "Elegant gold charger plate" },
+                { id: 12, name: "Wine Glass - Plain Gold", originalPrice: 350, price: 250, mainCategory: "Tableware & Dining Accessories", subCategory: "Wine Glasses - Plain Gold", images: [basePath + "wine-glass-gold.jpg"], stock: 150, featured: false, description: "Elegant gold wine glass" },
+                { id: 13, name: "Wine Glass - Stripe Gold", originalPrice: 380, price: 280, mainCategory: "Tableware & Dining Accessories", subCategory: "Wine Glasses - Stripe Gold", images: [basePath + "wine-glass-stripe.jpg"], stock: 120, featured: false, description: "Striped gold wine glass" },
+                { id: 14, name: "Wine Glass - Flowered Gold", originalPrice: 400, price: 300, mainCategory: "Tableware & Dining Accessories", subCategory: "Wine Glasses - Flowered Gold", images: [basePath + "wine-glass-flowered.jpg"], stock: 100, featured: true, description: "Floral pattern wine glass" },
+                { id: 15, name: "Gold Spiral Napkin Ring", originalPrice: 150, price: 100, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-gold-spiral.jpeg"], stock: 150, featured: true, description: "Gold spiral design napkin rings" },
+                { id: 16, name: "Pearl Napkin Rings", originalPrice: 200, price: 150, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-pearl.jpeg"], stock: 120, featured: false, description: "Pearl embellished napkin rings" },
+                
+                // Catering & Serving Equipment
+                { id: 17, name: "Chafing Dish - Round", originalPrice: 3500, price: 2800, mainCategory: "Catering & Serving Equipment", subCategory: "Chafing Dishes - Round Designs", images: [basePath + "chafing-round.jpg"], stock: 30, featured: true, description: "Premium round chafing dish" },
+                { id: 18, name: "Chafing Dish - Rectangle", originalPrice: 4000, price: 3200, mainCategory: "Catering & Serving Equipment", subCategory: "Chafing Dishes - Rectangle Designs", images: [basePath + "chafing-rectangle.jpg"], stock: 25, featured: true, description: "Rectangular chafing dish" },
+                { id: 19, name: "Chafing Dish - Roll-Top", originalPrice: 4500, price: 3600, mainCategory: "Catering & Serving Equipment", subCategory: "Chafing Dishes - Roll-Top / Flip-Top", images: [basePath + "chafing-rolltop.jpg"], stock: 20, featured: false, description: "Roll-top chafing dish" },
+                
+                // Decorations & Styling
+                { id: 20, name: "Sage Green Balloons", originalPrice: 300, price: 250, mainCategory: "Decorations & Styling", subCategory: "Balloons", images: [basePath + "balloons-sage.jpeg"], stock: 50, featured: true, description: "Pack of 100 sage green balloons" },
+                { id: 21, name: "Ribbon Balloons", originalPrice: 400, price: 320, mainCategory: "Decorations & Styling", subCategory: "Ribbon Balloons", images: [basePath + "ribbon-balloons.jpg"], stock: 40, featured: false, description: "Elegant ribbon balloons" },
+                { id: 22, name: "Crystal Centerpiece", originalPrice: 3000, price: 2500, mainCategory: "Decorations & Styling", subCategory: "Center Pieces", images: [basePath + "centerpiece-crystal.jpg"], stock: 15, featured: true, description: "Beautiful crystal centerpiece" },
+                { id: 23, name: "Gold Arch", originalPrice: 8500, price: 6800, mainCategory: "Decorations & Styling", subCategory: "Arches", images: [basePath + "gold-arch.jpg"], stock: 5, featured: true, description: "Elegant gold wedding arch" },
+                
+                // Event Barriers & Crowd Control
+                { id: 24, name: "Stanchions", originalPrice: 3500, price: 2800, mainCategory: "Event Barriers & Crowd Control", subCategory: "Stanchions", images: [basePath + "stanchions.jpg"], stock: 30, featured: false, description: "Red velvet rope stanchions" },
+                
+                // Specialty Decor
+                { id: 25, name: "Electric Fireplace - Vapor", originalPrice: 25000, price: 19999, mainCategory: "Specialty Decor", subCategory: "Electric Fireplace - Vapor", images: [basePath + "fireplace-vapor.jpg"], stock: 5, featured: true, description: "Modern vapor electric fireplace" },
+                { id: 26, name: "Electric Fireplace - 2D", originalPrice: 18000, price: 14999, mainCategory: "Specialty Decor", subCategory: "Electric Fireplace - 2D", images: [basePath + "fireplace-2d.jpg"], stock: 8, featured: false, description: "2D electric fireplace" },
+                
+                // Beverage Accessories
+                { id: 27, name: "Wine Holder - Chain", originalPrice: 1800, price: 1400, mainCategory: "Beverage Accessories", subCategory: "Wine Holders - Chain", images: [basePath + "wine-holder-chain.jpg"], stock: 25, featured: false, description: "Chain-style wine holder" },
+                { id: 28, name: "Wine Holder - Cart", originalPrice: 3500, price: 2800, mainCategory: "Beverage Accessories", subCategory: "Wine Holders - Cart", images: [basePath + "wine-holder-cart.jpg"], stock: 10, featured: true, description: "Mobile wine cart" },
+                
+                // Furniture
+                { id: 29, name: "Round Table", originalPrice: 8500, price: 6800, mainCategory: "Furniture", subCategory: "Round Tables", images: [basePath + "round-table.jpg"], stock: 20, featured: true, description: "Elegant round table" },
+                { id: 30, name: "Rectangle Table", originalPrice: 9500, price: 7600, mainCategory: "Furniture", subCategory: "Rectangle Tables", images: [basePath + "rectangle-table.jpg"], stock: 25, featured: false, description: "Premium rectangle table" }
             ];
-            // Save to localStorage
             localStorage.setItem('products', JSON.stringify(products));
         }
 
@@ -369,31 +447,47 @@
                     stockText = `Only ${product.stock} left`;
                 }
                 
+                const mainImage = product.images && product.images.length ? product.images[0] : (product.image || basePath + 'placeholder.jpg');
+                const additionalImages = product.images && product.images.length > 1 ? product.images.slice(1) : [];
+                
                 html += `
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="product-card">
                             ${product.featured ? '<span class="featured-badge"><i class="bi bi-star-fill me-1"></i>Featured</span>' : ''}
                             <span class="stock-badge ${stockClass}">${stockText}</span>
-                            <img src="${product.image}" class="product-image" alt="${product.name}"
+                            <img src="${mainImage}" class="product-image" alt="${product.name}" id="main-img-${product.id}"
                                  onerror="this.src='${basePath}placeholder.jpg'">
-                            <h5 class="product-name">${product.name}</h5>
-                            <p class="text-muted small mb-2">${product.description || ''}</p>
-                            <div>
-                                ${product.originalPrice ? `<span class="original-price">Ksh ${product.originalPrice.toLocaleString()}</span>` : ''}
-                                <span class="product-price">Ksh ${product.price.toLocaleString()}</span>
+                            ${additionalImages.length ? `
+                            <div class="thumbnail-container">
+                                ${additionalImages.map((img, idx) => `
+                                    <img src="${img}" class="thumbnail-img" onclick="changeMainImage(${product.id}, '${img}')" alt="View ${idx+1}">
+                                `).join('')}
                             </div>
-                            
-                            <div class="quantity-control">
-                                <button class="quantity-btn" onclick="updateQuantity(${product.id}, -1)">−</button>
-                                <input type="number" class="quantity-input" id="qty-${product.id}" 
-                                       value="${quantities[product.id] || 1}" min="1" max="${product.stock}" 
-                                       onchange="handleQuantityChange(${product.id}, this.value)">
-                                <button class="quantity-btn" onclick="updateQuantity(${product.id}, 1)">+</button>
+                            ` : ''}
+                            <div class="p-2">
+                                <h5 class="product-name">${product.name}</h5>
+                                <div>
+                                    <span class="category-badge">${product.mainCategory || product.category}</span>
+                                    ${product.subCategory ? `<span class="category-badge subcategory-badge">${product.subCategory}</span>` : ''}
+                                </div>
+                                <div class="mt-1">
+                                    ${product.colors ? product.colors.map(c => `<span class="color-dot" style="background-color: ${c.value};" title="${c.name}"></span>`).join('') : ''}
+                                </div>
+                                <div>
+                                    ${product.originalPrice ? `<span class="original-price">Ksh ${product.originalPrice.toLocaleString()}</span>` : ''}
+                                    <span class="product-price">Ksh ${product.price.toLocaleString()}</span>
+                                </div>
+                                <div class="quantity-control">
+                                    <button class="quantity-btn" onclick="updateQuantity(${product.id}, -1)">−</button>
+                                    <input type="number" class="quantity-input" id="qty-${product.id}" 
+                                           value="${quantities[product.id] || 1}" min="1" max="${product.stock}" 
+                                           onchange="handleQuantityChange(${product.id}, this.value)">
+                                    <button class="quantity-btn" onclick="updateQuantity(${product.id}, 1)">+</button>
+                                </div>
+                                <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
+                                    <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                                </button>
                             </div>
-                            
-                            <button class="add-to-cart-btn" onclick="addToCart(${product.id})">
-                                <i class="bi bi-cart-plus me-2"></i>Add to Cart
-                            </button>
                         </div>
                     </div>
                 `;
@@ -401,6 +495,13 @@
             
             grid.innerHTML = html;
             updateProductCount(productsToShow.length);
+        }
+
+        function changeMainImage(productId, newSrc) {
+            const mainImg = document.getElementById(`main-img-${productId}`);
+            if (mainImg) {
+                mainImg.src = newSrc;
+            }
         }
 
         function displayFeaturedProducts() {
@@ -414,16 +515,16 @@
 
             let html = '';
             featured.forEach(product => {
+                const mainImage = product.images && product.images.length ? product.images[0] : (product.image || basePath + 'placeholder.jpg');
                 html += `
                     <div class="col-md-3 mb-3">
                         <div class="product-card" style="padding: 15px;">
                             <span class="featured-badge"><i class="bi bi-star-fill me-1"></i>Special</span>
-                            <img src="${product.image}" class="product-image" style="height: 150px;" alt="${product.name}">
+                            <img src="${mainImage}" class="product-image" style="height: 150px;" alt="${product.name}">
                             <h6 class="fw-bold mt-2">${product.name}</h6>
-                            <div>
-                                ${product.originalPrice ? `<span class="original-price">Ksh ${product.originalPrice.toLocaleString()}</span>` : ''}
-                                <span style="color: #C6A86A; font-weight: bold;">Ksh ${product.price.toLocaleString()}</span>
-                            </div>
+                            <div class="small">${product.subCategory || ''}</div>
+                            <div>${product.originalPrice ? `<span class="original-price">Ksh ${product.originalPrice.toLocaleString()}</span>` : ''}
+                            <span style="color: #C6A86A; font-weight: bold;">Ksh ${product.price.toLocaleString()}</span></div>
                             <div class="quantity-control" style="max-width: 120px; margin-top: 10px;">
                                 <button class="quantity-btn" style="width: 30px; height: 30px;" onclick="updateQuantity(${product.id}, -1)">−</button>
                                 <input type="number" class="quantity-input" style="width: 40px; height: 30px;" 
@@ -500,7 +601,7 @@
                     name: product.name,
                     price: product.price,
                     quantity: quantity,
-                    image: product.image
+                    image: product.images ? product.images[0] : product.image
                 });
             }
             
@@ -527,7 +628,7 @@
             } else if (category === 'Featured') {
                 currentProducts = products.filter(p => p.featured === true);
             } else {
-                currentProducts = products.filter(p => p.category === category);
+                currentProducts = products.filter(p => (p.mainCategory || p.category) === category);
             }
             
             displayProducts(currentProducts);
@@ -542,7 +643,8 @@
             } else {
                 const searchResults = currentProducts.filter(p => 
                     p.name.toLowerCase().includes(searchTerm) || 
-                    p.category.toLowerCase().includes(searchTerm) ||
+                    ((p.mainCategory || p.category) && (p.mainCategory || p.category).toLowerCase().includes(searchTerm)) ||
+                    (p.subCategory && p.subCategory.toLowerCase().includes(searchTerm)) ||
                     (p.description && p.description.toLowerCase().includes(searchTerm))
                 );
                 displayProducts(searchResults);
