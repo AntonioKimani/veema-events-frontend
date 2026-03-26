@@ -191,15 +191,51 @@
     <script>
         const basePath = '/assets/images/';
         
-        // Load products from localStorage
-        let products = JSON.parse(localStorage.getItem('products')) || [];
+        // ============================================
+        // COMPLETE PRODUCT DATABASE (FALLBACK)
+        // ============================================
+        const defaultProducts = [
+            // Chair Covers & Decor
+            { id: 1, name: "Light Seat Spandex", originalPrice: 450, price: 350, mainCategory: "Chair Covers & Decor", subCategory: "Light Seat Spandex", images: [basePath + "spandex-cover.jpeg"], stock: 100, featured: true, description: "Light weight spandex seat cover. Perfect for weddings and events. Easy to fit and remove.", colors: [{name:"White",value:"#FFFFFF"},{name:"Black",value:"#000000"},{name:"Gold",value:"#C6A86A"}] },
+            { id: 2, name: "Heavy Seat Spandex", originalPrice: 550, price: 450, mainCategory: "Chair Covers & Decor", subCategory: "Heavy Seat Spandex", images: [basePath + "spandex-cover.jpeg"], stock: 80, featured: true, description: "Heavy duty spandex seat cover. Premium quality, durable material.", colors: [{name:"White",value:"#FFFFFF"},{name:"Black",value:"#000000"}] },
+            { id: 3, name: "Tie Backs", originalPrice: 120, price: 80, mainCategory: "Chair Covers & Decor", subCategory: "Tie Backs", images: [basePath + "tie-backs.jpeg"], stock: 200, featured: false, description: "Decorative tie backs for chair covers. Set of 10 pieces.", colors: [{name:"Gold",value:"#C6A86A"},{name:"Silver",value:"#C0C0C0"}] },
+            
+            // Table Covers & Linens
+            { id: 4, name: "Jacquard Round Table Cloth - Gold", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth", images: [basePath + "tablecloth-gold.jpg"], stock: 25, featured: true, description: "Premium gold jacquard table cloth. Elegant design for formal events." },
+            { id: 5, name: "Jacquard Round Table Cloth - White", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth", images: [basePath + "tablecloth-white.jpg"], stock: 30, featured: true, description: "Elegant white jacquard table cloth. Classic look for weddings." },
+            { id: 6, name: "Cheese Runner", originalPrice: 550, price: 450, mainCategory: "Table Covers & Linens", subCategory: "Cheese Runner", images: [basePath + "cheese-runner.jpeg"], stock: 40, featured: true, description: "Cheese pattern table runner. Unique rustic design." },
+            { id: 7, name: "Sequin Runner", originalPrice: 1500, price: 1200, mainCategory: "Table Covers & Linens", subCategory: "Sequin Runner", images: [basePath + "runner-sequin.jpg"], stock: 20, featured: true, description: "Sparkling sequin table runner. Adds glamour to any table." },
+            
+            // Tableware & Dining Accessories
+            { id: 8, name: "Gold Charger Plate", originalPrice: 600, price: 450, mainCategory: "Tableware & Dining Accessories", subCategory: "Charger Plates", images: [basePath + "charger-gold.jpg"], stock: 200, featured: true, description: "Elegant gold charger plate. Set of 6. Perfect for formal dining." },
+            { id: 9, name: "Gold Spiral Napkin Ring", originalPrice: 150, price: 100, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-gold-spiral.jpeg"], stock: 150, featured: true, description: "Gold spiral design napkin rings. Set of 6 pieces." },
+            { id: 10, name: "Pearl Napkin Rings", originalPrice: 200, price: 150, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-pearl.jpeg"], stock: 120, featured: false, description: "Pearl embellished napkin rings. Set of 6 pieces." },
+            
+            // Decorations & Styling
+            { id: 11, name: "Sage Green Balloons", originalPrice: 300, price: 250, mainCategory: "Decorations & Styling", subCategory: "Balloons", images: [basePath + "balloons-sage.jpeg"], stock: 50, featured: true, description: "Pack of 100 sage green balloons. Perfect for weddings and events." },
+            { id: 12, name: "Crystal Centerpiece", originalPrice: 3000, price: 2500, mainCategory: "Decorations & Styling", subCategory: "Center Pieces", images: [basePath + "centerpiece-crystal.jpg"], stock: 15, featured: true, description: "Beautiful crystal centerpiece with LED lights. Height: 25cm." }
+        ];
+
+        // Try to load from localStorage, fallback to defaults
+        let products = [];
         
-        // Default products if none exist
-        if (products.length === 0) {
-            products = [
-                { id: 1, name: "Light Seat Spandex", price: 350, originalPrice: 450, mainCategory: "Chair Covers & Decor", subCategory: "Light Seat Spandex", images: [basePath + "spandex-cover.jpeg"], stock: 100, featured: true, description: "Light weight spandex seat cover", colors: [{name:"White",value:"#FFFFFF"},{name:"Black",value:"#000000"},{name:"Gold",value:"#C6A86A"}] },
-                { id: 2, name: "Gold Charger Plate", price: 450, originalPrice: 600, mainCategory: "Tableware & Dining Accessories", subCategory: "Charger Plates", images: [basePath + "charger-gold.jpg"], stock: 200, featured: true, description: "Elegant gold charger plate" }
-            ];
+        try {
+            const stored = localStorage.getItem('products');
+            if (stored && stored !== 'undefined' && stored !== 'null') {
+                const parsed = JSON.parse(stored);
+                if (parsed && parsed.length > 0) {
+                    products = parsed;
+                } else {
+                    products = defaultProducts;
+                }
+            } else {
+                products = defaultProducts;
+                // Save to localStorage for future use
+                localStorage.setItem('products', JSON.stringify(products));
+            }
+        } catch (e) {
+            console.error('Error loading products:', e);
+            products = defaultProducts;
         }
 
         // Get product ID from URL
@@ -210,8 +246,13 @@
         let selectedColor = null;
 
         document.addEventListener('DOMContentLoaded', function() {
-            if (!productId) {
-                window.location.href = 'products.html';
+            if (!productId || isNaN(productId)) {
+                document.getElementById('productContainer').innerHTML = `
+                    <div class="alert alert-danger text-center">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Invalid product ID. <a href="products.html">Back to products</a>
+                    </div>
+                `;
                 return;
             }
             
@@ -226,6 +267,7 @@
             if (!product) {
                 document.getElementById('productContainer').innerHTML = `
                     <div class="alert alert-danger text-center">
+                        <i class="bi bi-exclamation-triangle"></i>
                         Product not found. <a href="products.html">Back to products</a>
                     </div>
                 `;
@@ -237,7 +279,7 @@
 
         function displayProduct(product) {
             // Get images - handle both single image and multiple images array
-            const images = product.images && product.images.length ? product.images : [product.image || basePath + 'placeholder.jpg'];
+            const images = (product.images && product.images.length) ? product.images : [product.image || basePath + 'placeholder.jpg'];
             
             // Determine stock status
             let stockStatus = '';
@@ -274,7 +316,7 @@
                     <div class="col-md-6">
                         <img src="${images[0]}" 
                              class="product-image-main" 
-                             alt="${product.name}"
+                             alt="${escapeHtml(product.name)}"
                              onclick="openZoom('${images[0]}')"
                              id="mainImage"
                              onerror="this.src='${basePath}placeholder.jpg'">
@@ -295,8 +337,8 @@
                     <div class="col-md-6">
                         <div class="product-info">
                             <span class="product-category">
-                                <i class="bi bi-tag"></i> ${product.mainCategory || product.category || 'Uncategorized'}
-                                ${product.subCategory ? ` / ${product.subCategory}` : ''}
+                                <i class="bi bi-tag"></i> ${escapeHtml(product.mainCategory || product.category || 'Uncategorized')}
+                                ${product.subCategory ? ` / ${escapeHtml(product.subCategory)}` : ''}
                             </span>
                             
                             <h1 class="fw-bold mb-3">${escapeHtml(product.name)}</h1>
@@ -313,7 +355,7 @@
                                 </span>
                             </div>
                             
-                            <p class="mb-4">${product.description || 'No description available.'}</p>
+                            <p class="mb-4">${escapeHtml(product.description || 'No description available.')}</p>
                             
                             ${colorsHtml}
                             
@@ -339,7 +381,6 @@
                                 </a>
                             </div>
                             
-                            <!-- Product Meta -->
                             <div class="mt-4 pt-4 border-top">
                                 <p class="small text-muted mb-1">
                                     <i class="bi bi-upc-scan"></i> Product ID: VE-${product.id.toString().padStart(4, '0')}
@@ -386,7 +427,6 @@
             
             if (currentQuantity < 1) currentQuantity = 1;
             
-            // Get product to check max stock
             const product = products.find(p => p.id === productId);
             if (product && currentQuantity > product.stock) {
                 currentQuantity = product.stock;
@@ -396,11 +436,9 @@
         }
 
         function selectColor(element, colorName) {
-            // Remove selected class from all color dots
             document.querySelectorAll('.color-dot').forEach(dot => {
                 dot.classList.remove('selected');
             });
-            // Add selected class to clicked dot
             element.classList.add('selected');
             selectedColor = colorName;
         }
@@ -461,7 +499,6 @@
                 .catch(e => console.log('Footer error:', e));
         }
 
-        // Keyboard shortcut to close zoom (ESC key)
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeZoom();
