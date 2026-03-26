@@ -291,18 +291,13 @@
             </div>
         </div>
 
-        <!-- Category Filters - ALL 9 CATEGORIES -->
+        <!-- Category Filters -->
         <div class="text-center mb-4">
             <button class="category-btn active" onclick="filterProducts('all')">All</button>
             <button class="category-btn" onclick="filterProducts('Chair Covers & Decor')">Chair Covers</button>
             <button class="category-btn" onclick="filterProducts('Table Covers & Linens')">Table Linens</button>
             <button class="category-btn" onclick="filterProducts('Tableware & Dining Accessories')">Tableware</button>
-            <button class="category-btn" onclick="filterProducts('Catering & Serving Equipment')">Catering</button>
             <button class="category-btn" onclick="filterProducts('Decorations & Styling')">Decorations</button>
-            <button class="category-btn" onclick="filterProducts('Event Barriers & Crowd Control')">Barriers</button>
-            <button class="category-btn" onclick="filterProducts('Specialty Decor')">Specialty</button>
-            <button class="category-btn" onclick="filterProducts('Beverage Accessories')">Beverage</button>
-            <button class="category-btn" onclick="filterProducts('Furniture')">Furniture</button>
             <button class="category-btn" onclick="filterProducts('Featured')">Featured</button>
         </div>
 
@@ -337,7 +332,7 @@
     
     <script>
         // ============================================
-        // PRODUCT DATA - SYNCED WITH ADMIN PANEL
+        // PRODUCT DATA - ONLY PRODUCTS WITH EXISTING IMAGES
         // ============================================
         
         const basePath = '/assets/images/';
@@ -345,7 +340,7 @@
         // Load products from localStorage (synced with admin)
         let products = JSON.parse(localStorage.getItem('products')) || [];
         
-        // If no products in localStorage, use default data with ALL categories
+        // If no products in localStorage, use default data (only products with existing images)
         if (products.length === 0) {
             products = [
                 // Chair Covers & Decor
@@ -356,45 +351,17 @@
                 // Table Covers & Linens
                 { id: 4, name: "Jacquard Round Table Cloth - Gold", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth - Small Print", images: [basePath + "tablecloth-gold.jpg"], stock: 25, featured: true, description: "Premium gold jacquard table cloth" },
                 { id: 5, name: "Jacquard Round Table Cloth - White", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth - New Print", images: [basePath + "tablecloth-white.jpg"], stock: 30, featured: true, description: "Elegant white jacquard table cloth" },
-                { id: 6, name: "Chevron Table Cover", originalPrice: 3800, price: 3000, mainCategory: "Table Covers & Linens", subCategory: "Chevron Table Cover", images: [basePath + "chevron-cover.jpg"], stock: 20, featured: false, description: "Modern chevron pattern table cover" },
-                { id: 7, name: "Overlay Table Cover", originalPrice: 2500, price: 1800, mainCategory: "Table Covers & Linens", subCategory: "Overlay Table Cover", images: [basePath + "overlay-cover.jpg"], stock: 40, featured: false, description: "Elegant overlay table cover" },
-                { id: 8, name: "Cheese Runner", originalPrice: 550, price: 450, mainCategory: "Table Covers & Linens", subCategory: "Cheese Runner", images: [basePath + "cheese-runner.jpeg"], stock: 40, featured: true, description: "Cheese pattern table runner" },
-                { id: 9, name: "Jacquard Runner", originalPrice: 650, price: 500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Runner", images: [basePath + "jacquard-runner.jpg"], stock: 35, featured: false, description: "Elegant jacquard table runner" },
-                { id: 10, name: "Sequin Runner", originalPrice: 1500, price: 1200, mainCategory: "Table Covers & Linens", subCategory: "Sequin Runner", images: [basePath + "runner-sequin.jpg"], stock: 20, featured: false, description: "Sparkling sequin table runner" },
+                { id: 6, name: "Cheese Runner", originalPrice: 550, price: 450, mainCategory: "Table Covers & Linens", subCategory: "Cheese Runner", images: [basePath + "cheese-runner.jpeg"], stock: 40, featured: true, description: "Cheese pattern table runner" },
+                { id: 7, name: "Sequin Runner", originalPrice: 1500, price: 1200, mainCategory: "Table Covers & Linens", subCategory: "Sequin Runner", images: [basePath + "runner-sequin.jpg"], stock: 20, featured: true, description: "Sparkling sequin table runner" },
                 
                 // Tableware & Dining Accessories
-                { id: 11, name: "Gold Charger Plate", originalPrice: 600, price: 450, mainCategory: "Tableware & Dining Accessories", subCategory: "Charger Plates", images: [basePath + "charger-gold.jpg"], stock: 200, featured: true, description: "Elegant gold charger plate" },
-                { id: 12, name: "Wine Glass - Plain Gold", originalPrice: 350, price: 250, mainCategory: "Tableware & Dining Accessories", subCategory: "Wine Glasses - Plain Gold", images: [basePath + "wine-glass-gold.jpg"], stock: 150, featured: false, description: "Elegant gold wine glass" },
-                { id: 13, name: "Wine Glass - Stripe Gold", originalPrice: 380, price: 280, mainCategory: "Tableware & Dining Accessories", subCategory: "Wine Glasses - Stripe Gold", images: [basePath + "wine-glass-stripe.jpg"], stock: 120, featured: false, description: "Striped gold wine glass" },
-                { id: 14, name: "Wine Glass - Flowered Gold", originalPrice: 400, price: 300, mainCategory: "Tableware & Dining Accessories", subCategory: "Wine Glasses - Flowered Gold", images: [basePath + "wine-glass-flowered.jpg"], stock: 100, featured: true, description: "Floral pattern wine glass" },
-                { id: 15, name: "Gold Spiral Napkin Ring", originalPrice: 150, price: 100, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-gold-spiral.jpeg"], stock: 150, featured: true, description: "Gold spiral design napkin rings" },
-                { id: 16, name: "Pearl Napkin Rings", originalPrice: 200, price: 150, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-pearl.jpeg"], stock: 120, featured: false, description: "Pearl embellished napkin rings" },
-                
-                // Catering & Serving Equipment
-                { id: 17, name: "Chafing Dish - Round", originalPrice: 3500, price: 2800, mainCategory: "Catering & Serving Equipment", subCategory: "Chafing Dishes - Round Designs", images: [basePath + "chafing-round.jpg"], stock: 30, featured: true, description: "Premium round chafing dish" },
-                { id: 18, name: "Chafing Dish - Rectangle", originalPrice: 4000, price: 3200, mainCategory: "Catering & Serving Equipment", subCategory: "Chafing Dishes - Rectangle Designs", images: [basePath + "chafing-rectangle.jpg"], stock: 25, featured: true, description: "Rectangular chafing dish" },
-                { id: 19, name: "Chafing Dish - Roll-Top", originalPrice: 4500, price: 3600, mainCategory: "Catering & Serving Equipment", subCategory: "Chafing Dishes - Roll-Top / Flip-Top", images: [basePath + "chafing-rolltop.jpg"], stock: 20, featured: false, description: "Roll-top chafing dish" },
+                { id: 8, name: "Gold Charger Plate", originalPrice: 600, price: 450, mainCategory: "Tableware & Dining Accessories", subCategory: "Charger Plates", images: [basePath + "charger-gold.jpg"], stock: 200, featured: true, description: "Elegant gold charger plate" },
+                { id: 9, name: "Gold Spiral Napkin Ring", originalPrice: 150, price: 100, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-gold-spiral.jpeg"], stock: 150, featured: true, description: "Gold spiral design napkin rings" },
+                { id: 10, name: "Pearl Napkin Rings", originalPrice: 200, price: 150, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-pearl.jpeg"], stock: 120, featured: false, description: "Pearl embellished napkin rings" },
                 
                 // Decorations & Styling
-                { id: 20, name: "Sage Green Balloons", originalPrice: 300, price: 250, mainCategory: "Decorations & Styling", subCategory: "Balloons", images: [basePath + "balloons-sage.jpeg"], stock: 50, featured: true, description: "Pack of 100 sage green balloons" },
-                { id: 21, name: "Ribbon Balloons", originalPrice: 400, price: 320, mainCategory: "Decorations & Styling", subCategory: "Ribbon Balloons", images: [basePath + "ribbon-balloons.jpg"], stock: 40, featured: false, description: "Elegant ribbon balloons" },
-                { id: 22, name: "Crystal Centerpiece", originalPrice: 3000, price: 2500, mainCategory: "Decorations & Styling", subCategory: "Center Pieces", images: [basePath + "centerpiece-crystal.jpg"], stock: 15, featured: true, description: "Beautiful crystal centerpiece" },
-                { id: 23, name: "Gold Arch", originalPrice: 8500, price: 6800, mainCategory: "Decorations & Styling", subCategory: "Arches", images: [basePath + "gold-arch.jpg"], stock: 5, featured: true, description: "Elegant gold wedding arch" },
-                
-                // Event Barriers & Crowd Control
-                { id: 24, name: "Stanchions", originalPrice: 3500, price: 2800, mainCategory: "Event Barriers & Crowd Control", subCategory: "Stanchions", images: [basePath + "stanchions.jpg"], stock: 30, featured: false, description: "Red velvet rope stanchions" },
-                
-                // Specialty Decor
-                { id: 25, name: "Electric Fireplace - Vapor", originalPrice: 25000, price: 19999, mainCategory: "Specialty Decor", subCategory: "Electric Fireplace - Vapor", images: [basePath + "fireplace-vapor.jpg"], stock: 5, featured: true, description: "Modern vapor electric fireplace" },
-                { id: 26, name: "Electric Fireplace - 2D", originalPrice: 18000, price: 14999, mainCategory: "Specialty Decor", subCategory: "Electric Fireplace - 2D", images: [basePath + "fireplace-2d.jpg"], stock: 8, featured: false, description: "2D electric fireplace" },
-                
-                // Beverage Accessories
-                { id: 27, name: "Wine Holder - Chain", originalPrice: 1800, price: 1400, mainCategory: "Beverage Accessories", subCategory: "Wine Holders - Chain", images: [basePath + "wine-holder-chain.jpg"], stock: 25, featured: false, description: "Chain-style wine holder" },
-                { id: 28, name: "Wine Holder - Cart", originalPrice: 3500, price: 2800, mainCategory: "Beverage Accessories", subCategory: "Wine Holders - Cart", images: [basePath + "wine-holder-cart.jpg"], stock: 10, featured: true, description: "Mobile wine cart" },
-                
-                // Furniture
-                { id: 29, name: "Round Table", originalPrice: 8500, price: 6800, mainCategory: "Furniture", subCategory: "Round Tables", images: [basePath + "round-table.jpg"], stock: 20, featured: true, description: "Elegant round table" },
-                { id: 30, name: "Rectangle Table", originalPrice: 9500, price: 7600, mainCategory: "Furniture", subCategory: "Rectangle Tables", images: [basePath + "rectangle-table.jpg"], stock: 25, featured: false, description: "Premium rectangle table" }
+                { id: 11, name: "Sage Green Balloons", originalPrice: 300, price: 250, mainCategory: "Decorations & Styling", subCategory: "Balloons", images: [basePath + "balloons-sage.jpeg"], stock: 50, featured: true, description: "Pack of 100 sage green balloons" },
+                { id: 12, name: "Crystal Centerpiece", originalPrice: 3000, price: 2500, mainCategory: "Decorations & Styling", subCategory: "Center Pieces", images: [basePath + "centerpiece-crystal.jpg"], stock: 15, featured: true, description: "Beautiful crystal centerpiece" }
             ];
             localStorage.setItem('products', JSON.stringify(products));
         }
