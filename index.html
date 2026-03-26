@@ -418,7 +418,7 @@
         </div>
     </section>
 
-    <!-- Featured Products Section (Main Collection - Only Featured Products) -->
+    <!-- Featured Products Section (Main Collection - Only Featured Products with Working Images) -->
     <section id="featured" class="container py-5">
         <div class="text-center mb-5">
             <h2 class="section-title">Featured Collection</h2>
@@ -554,32 +554,24 @@
     
     <script>
         // ============================================
-        // PRODUCT DATA - SYNCED WITH ADMIN PANEL
+        // PRODUCT DATA - ONLY PRODUCTS WITH WORKING IMAGES
         // ============================================
         
         const basePath = '/assets/images/';
         
-        // Default products that have working images
+        // Default products that have working images (these will show on homepage)
         const defaultProducts = [
             // Chair Covers & Decor
             { id: 1, name: "Light Seat Spandex", originalPrice: 450, price: 350, mainCategory: "Chair Covers & Decor", subCategory: "Light Seat Spandex", image: basePath + "spandex-cover.jpeg", stock: 100, featured: true, description: "Light weight spandex seat cover" },
             { id: 2, name: "Heavy Seat Spandex", originalPrice: 550, price: 450, mainCategory: "Chair Covers & Decor", subCategory: "Heavy Seat Spandex", image: basePath + "spandex-cover.jpeg", stock: 80, featured: true, description: "Heavy duty spandex seat cover" },
-            { id: 3, name: "Tie Backs", originalPrice: 120, price: 80, mainCategory: "Chair Covers & Decor", subCategory: "Tie Backs", image: basePath + "tie-backs.jpeg", stock: 200, featured: false, description: "Decorative tie backs" },
-            
-            // Table Covers & Linens
-            { id: 4, name: "Jacquard Round Table Cloth - Gold", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth", image: basePath + "tablecloth-gold.jpg", stock: 25, featured: true, description: "Premium gold jacquard table cloth" },
-            { id: 5, name: "Jacquard Round Table Cloth - White", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth", image: basePath + "tablecloth-white.jpg", stock: 30, featured: true, description: "Elegant white jacquard table cloth" },
-            { id: 6, name: "Cheese Runner", originalPrice: 550, price: 450, mainCategory: "Table Covers & Linens", subCategory: "Cheese Runner", image: basePath + "cheese-runner.jpeg", stock: 40, featured: true, description: "Cheese pattern table runner" },
-            { id: 7, name: "Sequin Runner", originalPrice: 1500, price: 1200, mainCategory: "Table Covers & Linens", subCategory: "Sequin Runner", image: basePath + "runner-sequin.jpg", stock: 20, featured: true, description: "Sparkling sequin table runner" },
-            
-            // Tableware & Dining Accessories
-            { id: 8, name: "Gold Charger Plate", originalPrice: 600, price: 450, mainCategory: "Tableware & Dining Accessories", subCategory: "Charger Plates", image: basePath + "charger-gold.jpg", stock: 200, featured: true, description: "Elegant gold charger plate" },
-            { id: 9, name: "Gold Spiral Napkin Ring", originalPrice: 150, price: 100, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", image: basePath + "napring-gold-spiral.jpeg", stock: 150, featured: true, description: "Gold spiral design napkin rings" },
-            { id: 10, name: "Pearl Napkin Rings", originalPrice: 200, price: 150, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", image: basePath + "napring-pearl.jpeg", stock: 120, featured: false, description: "Pearl embellished napkin rings" },
-            
-            // Decorations & Styling
-            { id: 11, name: "Sage Green Balloons", originalPrice: 300, price: 250, mainCategory: "Decorations & Styling", subCategory: "Balloons", image: basePath + "balloons-sage.jpeg", stock: 50, featured: true, description: "Pack of 100 sage green balloons" },
-            { id: 12, name: "Crystal Centerpiece", originalPrice: 3000, price: 2500, mainCategory: "Decorations & Styling", subCategory: "Center Pieces", image: basePath + "centerpiece-crystal.jpg", stock: 15, featured: true, description: "Beautiful crystal centerpiece" }
+            { id: 3, name: "Jacquard Round Table Cloth - Gold", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth", image: basePath + "tablecloth-gold.jpg", stock: 25, featured: true, description: "Premium gold jacquard table cloth" },
+            { id: 4, name: "Jacquard Round Table Cloth - White", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth", image: basePath + "tablecloth-white.jpg", stock: 30, featured: true, description: "Elegant white jacquard table cloth" },
+            { id: 5, name: "Cheese Runner", originalPrice: 550, price: 450, mainCategory: "Table Covers & Linens", subCategory: "Cheese Runner", image: basePath + "cheese-runner.jpeg", stock: 40, featured: true, description: "Cheese pattern table runner" },
+            { id: 6, name: "Sequin Runner", originalPrice: 1500, price: 1200, mainCategory: "Table Covers & Linens", subCategory: "Sequin Runner", image: basePath + "runner-sequin.jpg", stock: 20, featured: true, description: "Sparkling sequin table runner" },
+            { id: 7, name: "Gold Charger Plate", originalPrice: 600, price: 450, mainCategory: "Tableware & Dining Accessories", subCategory: "Charger Plates", image: basePath + "charger-gold.jpg", stock: 200, featured: true, description: "Elegant gold charger plate" },
+            { id: 8, name: "Gold Spiral Napkin Ring", originalPrice: 150, price: 100, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", image: basePath + "napring-gold-spiral.jpeg", stock: 150, featured: true, description: "Gold spiral design napkin rings" },
+            { id: 9, name: "Sage Green Balloons", originalPrice: 300, price: 250, mainCategory: "Decorations & Styling", subCategory: "Balloons", image: basePath + "balloons-sage.jpeg", stock: 50, featured: true, description: "Pack of 100 sage green balloons" },
+            { id: 10, name: "Crystal Centerpiece", originalPrice: 3000, price: 2500, mainCategory: "Decorations & Styling", subCategory: "Center Pieces", image: basePath + "centerpiece-crystal.jpg", stock: 15, featured: true, description: "Beautiful crystal centerpiece" }
         ];
 
         // Load products from localStorage (synced with admin) or use defaults
@@ -591,18 +583,26 @@
             localStorage.setItem('products', JSON.stringify(products));
         }
 
-        // Listen for changes from admin panel (new products added)
+        // Get only products that are marked as featured AND have valid images (or use fallback)
+        function getFeaturedProducts() {
+            // Filter only featured products
+            let featured = products.filter(p => p.featured === true);
+            
+            // If no featured products, show the defaults
+            if (featured.length === 0) {
+                featured = defaultProducts;
+            }
+            
+            return featured;
+        }
+
+        // Listen for changes from admin panel
         window.addEventListener('storage', (e) => {
             if (e.key === 'products') {
                 products = JSON.parse(e.newValue);
                 displayFeaturedProducts();
             }
         });
-
-        // Get only featured products (filter by featured flag)
-        function getFeaturedProducts() {
-            return products.filter(p => p.featured === true);
-        }
 
         document.addEventListener('DOMContentLoaded', function() {
             displayFeaturedProducts();
@@ -621,7 +621,7 @@
 
             let html = '';
             featuredProducts.forEach(product => {
-                // Get image - handle both old and new product structures
+                // Get image - use placeholder if image doesn't exist
                 const productImage = product.images ? product.images[0] : (product.image || basePath + 'placeholder.jpg');
                 
                 html += `
@@ -645,7 +645,6 @@
             container.innerHTML = html;
         }
 
-        // Helper function to escape HTML
         function escapeHtml(text) {
             if (!text) return '';
             return text.replace(/[&<>]/g, function(m) {
