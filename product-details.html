@@ -7,21 +7,52 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .product-image {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            border-radius: 10px;
-            border: 1px solid #ddd;
+        body {
+            background-color: #F8F5EF;
+            font-family: 'Inter', sans-serif;
         }
-        .product-info {
-            padding: 20px;
-            background: #f9f9f9;
+        .product-image-main {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            cursor: zoom-in;
+            background-color: #f5f5f5;
+        }
+        .product-thumbnail {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            background-color: #f5f5f5;
+        }
+        .product-thumbnail:hover {
+            opacity: 0.8;
+        }
+        .product-thumbnail.active {
+            border-color: #C6A86A;
+            transform: scale(0.95);
+        }
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .thumbnail-container::-webkit-scrollbar {
+            height: 5px;
+        }
+        .thumbnail-container::-webkit-scrollbar-thumb {
+            background: #C6A86A;
             border-radius: 10px;
         }
         .product-price {
-            color: #C6A75E;
             font-size: 2rem;
+            color: #C6A86A;
             font-weight: bold;
         }
         .product-category {
@@ -29,12 +60,14 @@
             background: #e9ecef;
             padding: 5px 15px;
             border-radius: 20px;
+            font-size: 0.9rem;
             margin-bottom: 15px;
         }
         .stock-badge {
             display: inline-block;
             padding: 5px 15px;
             border-radius: 20px;
+            font-size: 0.9rem;
             font-weight: 500;
         }
         .stock-badge.in-stock {
@@ -65,9 +98,10 @@
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
         }
         .quantity-btn:hover {
-            background: #C6A75E;
+            background: #C6A86A;
             color: white;
         }
         .quantity-input {
@@ -75,12 +109,60 @@
             height: 40px;
             border: none;
             text-align: center;
-            font-weight: bold;
-            border-left: 2px solid #dee2e6;
-            border-right: 2px solid #dee2e6;
+            font-weight: 600;
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
         }
-        .back-btn {
-            margin-top: 20px;
+        .product-info {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+        }
+        .zoom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .zoom-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        .zoom-modal.active {
+            display: flex;
+        }
+        .close-zoom {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+        .color-dot {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 5px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .color-dot:hover {
+            transform: scale(1.1);
+            border-color: #C6A86A;
+        }
+        .color-dot.selected {
+            border-color: #C6A86A;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #C6A86A;
         }
     </style>
 </head>
@@ -88,264 +170,246 @@
 
     <div id="navbar"></div>
 
-    <div class="container py-4">
-        <div id="product-details">
-            <div class="text-center py-5">
-                <div class="spinner-border text-warning" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
+    <div class="container py-5" id="productContainer">
+        <div class="text-center py-5">
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
+    </div>
+
+    <!-- Zoom Modal -->
+    <div class="zoom-modal" id="zoomModal">
+        <span class="close-zoom" onclick="closeZoom()">&times;</span>
+        <img id="zoomImage" src="" alt="Zoomed product">
     </div>
 
     <div id="footer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
-        // ============================================
-        // COMPLETE PRODUCT DATA WITH CORRECT INFO
-        // ============================================
-        
         const basePath = '/assets/images/';
         
-        const products = {
-            1: {
-                id: 1,
-                name: "Luxury Table Cloth - Gold",
-                price: 3500,
-                description: "Premium quality gold table cloth perfect for weddings and formal events. 100% polyester, stain resistant, wrinkle-free. Size: 180x280cm",
-                category: "Table Linens",
-                stock: 25,
-                image: basePath + "tablecloth-gold.jpg"
-            },
-            2: {
-                id: 2,
-                name: "Luxury Table Cloth - White",
-                price: 3500,
-                description: "Elegant white table cloth for classic wedding setups. Wrinkle-free fabric, easy to clean. Size: 180x280cm",
-                category: "Table Linens",
-                stock: 30,
-                image: basePath + "tablecloth-white.jpg"
-            },
-            3: {
-                id: 3,
-                name: "Premium Chair Ribbon - Burgundy",
-                price: 800,
-                description: "Beautiful burgundy ribbons for chair decorations. Each pack contains 50 pieces, 2 meters each. Satin finish.",
-                category: "Ribbons",
-                stock: 100,
-                image: basePath + "ribbon-burgundy.jpg"
-            },
-            4: {
-                id: 4,
-                name: "Premium Chair Ribbon - Gold",
-                price: 850,
-                description: "Metallic gold ribbons for luxury chair styling. 2 meters each, pack of 50.",
-                category: "Ribbons",
-                stock: 75,
-                image: basePath + "ribbon-gold.jpg"
-            },
-            5: {
-                id: 5,
-                name: "Gold Charger Plate",
-                price: 450,
-                description: "Metallic gold charger plate for elegant table settings. Set of 6. Diameter: 30cm",
-                category: "Tableware",
-                stock: 200,
-                image: basePath + "charger-gold.jpg"
-            },
-            6: {
-                id: 6,
-                name: "Crystal Centerpiece",
-                price: 2500,
-                description: "Beautiful crystal centerpiece with LED lights. Perfect for head tables. Height: 25cm",
-                category: "Decor",
-                stock: 15,
-                image: basePath + "centerpiece-crystal.jpg"
-            },
-            7: {
-                id: 7,
-                name: "Sequin Table Runner - Silver",
-                price: 1200,
-                description: "Sparkling silver sequin table runner for glamorous events. Length: 200cm",
-                category: "Table Linens",
-                stock: 20,
-                image: basePath + "runner-sequin.jpg"
-            },
-            9: {
-                id: 9,
-                name: "Sage Green Balloons",
-                price: 250,
-                description: "Sage green balloons - perfect for weddings and events. Pack of 100 pieces.",
-                category: "Decor",
-                stock: 50,
-                image: basePath + "balloons-sage.jpeg"
-            },
-            10: {
-                id: 10,
-                name: "Seat Spandex Cover (Light)",
-                price: 245,
-                description: "Light weight spandex seat cover for chairs. Stretchy and easy to fit.",
-                category: "Table Linens",
-                stock: 100,
-                image: basePath + "spandex-cover.jpeg"
-            },
-            11: {
-                id: 11,
-                name: "Seat Spandex Cover (Heavy)",
-                price: 380,
-                description: "Heavy duty spandex seat cover for chairs. Premium quality, durable material.",
-                category: "Table Linens",
-                stock: 80,
-                image: basePath + "spandex-cover.jpeg"
-            },
-            12: {
-                id: 12,
-                name: "Cheese Table Runner",
-                price: 450,
-                description: "Elegant cheese pattern table runner for rustic and vintage themed events.",
-                category: "Table Linens",
-                stock: 40,
-                image: basePath + "cheese-runner.jpeg"
-            },
-            13: {
-                id: 13,
-                name: "Tie Backs",
-                price: 80,
-                description: "Decorative tie backs for chair covers and drapes. Set of 10 pieces.",
-                category: "Ribbons",
-                stock: 200,
-                image: basePath + "tie-backs.jpeg"
-            },
-            14: {
-                id: 14,
-                name: "Gold Spiral Napkin Ring",
-                price: 100,
-                description: "Elegant gold spiral design napkin rings. Set of 6 pieces. Modern design.",
-                category: "Tableware",
-                stock: 150,
-                image: basePath + "napring-gold-spiral.jpeg"
-            },
-            15: {
-                id: 15,
-                name: "Pearl Napkin Rings",
-                price: 150,
-                description: "Classic pearl embellished napkin rings. Set of 6 pieces. Perfect for weddings.",
-                category: "Tableware",
-                stock: 120,
-                image: basePath + "napring-pearl.jpeg"
-            },
-            16: {
-                id: 16,
-                name: "Butterfly Gold Napkin Ring",
-                price: 130,
-                description: "Beautiful butterfly design gold napkin rings. Set of 6 pieces. Unique design.",
-                category: "Tableware",
-                stock: 100,
-                image: basePath + "napring-butterfly.jpeg"
-            },
-            17: {
-                id: 17,
-                name: "Acrylic Gold Stand",
-                price: 5000,
-                description: "Acrylic gold stand for centerpieces. Elegant and modern design. Height: 40cm",
-                category: "Decor",
-                stock: 15,
-                image: basePath + "acrylic-stand.jpeg"
-            }
-        };
+        // Load products from localStorage
+        let products = JSON.parse(localStorage.getItem('products')) || [];
+        
+        // Default products if none exist
+        if (products.length === 0) {
+            products = [
+                { id: 1, name: "Light Seat Spandex", price: 350, originalPrice: 450, mainCategory: "Chair Covers & Decor", subCategory: "Light Seat Spandex", images: [basePath + "spandex-cover.jpeg"], stock: 100, featured: true, description: "Light weight spandex seat cover", colors: [{name:"White",value:"#FFFFFF"},{name:"Black",value:"#000000"},{name:"Gold",value:"#C6A86A"}] },
+                { id: 2, name: "Gold Charger Plate", price: 450, originalPrice: 600, mainCategory: "Tableware & Dining Accessories", subCategory: "Charger Plates", images: [basePath + "charger-gold.jpg"], stock: 200, featured: true, description: "Elegant gold charger plate" }
+            ];
+        }
 
         // Get product ID from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const productId = parseInt(urlParams.get('id') || '1');
-        
-        // Get the product
-        const product = products[productId] || products[1];
-        
-        // Determine stock status
-        let stockStatus = '';
-        let stockClass = '';
-        if (product.stock > 10) {
-            stockStatus = 'In Stock';
-            stockClass = 'in-stock';
-        } else if (product.stock > 0) {
-            stockStatus = `Only ${product.stock} left`;
-            stockClass = 'low-stock';
-        } else {
-            stockStatus = 'Out of Stock';
-            stockClass = 'out-of-stock';
+        const productId = parseInt(urlParams.get('id'));
+
+        let currentQuantity = 1;
+        let selectedColor = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!productId) {
+                window.location.href = 'products.html';
+                return;
+            }
+            
+            loadProductDetails();
+            loadNavbar();
+            loadFooter();
+        });
+
+        function loadProductDetails() {
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) {
+                document.getElementById('productContainer').innerHTML = `
+                    <div class="alert alert-danger text-center">
+                        Product not found. <a href="products.html">Back to products</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            displayProduct(product);
         }
 
-        // Display product
-        document.getElementById('product-details').innerHTML = `
-            <div class="row">
-                <div class="col-md-6 text-center">
-                    <img src="${product.image}" class="product-image" alt="${product.name}"
-                         onerror="this.src='${basePath}placeholder.jpg'">
-                </div>
-                <div class="col-md-6">
-                    <div class="product-info">
-                        <span class="product-category">
-                            <i class="bi bi-tag"></i> ${product.category}
-                        </span>
-                        
-                        <h1 class="fw-bold mb-3">${product.name}</h1>
-                        
-                        <div class="product-price mb-3">
-                            Ksh ${product.price.toLocaleString()}
+        function displayProduct(product) {
+            // Get images - handle both single image and multiple images array
+            const images = product.images && product.images.length ? product.images : [product.image || basePath + 'placeholder.jpg'];
+            
+            // Determine stock status
+            let stockStatus = '';
+            let stockClass = '';
+            if (product.stock > 10) {
+                stockStatus = 'In Stock';
+                stockClass = 'in-stock';
+            } else if (product.stock > 0) {
+                stockStatus = `Only ${product.stock} left`;
+                stockClass = 'low-stock';
+            } else {
+                stockStatus = 'Out of Stock';
+                stockClass = 'out-of-stock';
+            }
+            
+            // Build color dots HTML
+            let colorsHtml = '';
+            if (product.colors && product.colors.length) {
+                colorsHtml = `
+                    <div class="mb-4">
+                        <h6>Available Colors</h6>
+                        <div class="d-flex flex-wrap">
+                            ${product.colors.map(color => `
+                                <div class="color-dot" style="background-color: ${color.value};" 
+                                     title="${color.name}" onclick="selectColor(this, '${color.name}')"></div>
+                            `).join('')}
                         </div>
+                    </div>
+                `;
+            }
+            
+            const html = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="${images[0]}" 
+                             class="product-image-main" 
+                             alt="${product.name}"
+                             onclick="openZoom('${images[0]}')"
+                             id="mainImage"
+                             onerror="this.src='${basePath}placeholder.jpg'">
                         
-                        <div class="mb-3">
-                            <span class="stock-badge ${stockClass}">
-                                <i class="bi ${product.stock > 0 ? 'bi-check-circle' : 'bi-x-circle'}"></i> 
-                                ${stockStatus}
+                        ${images.length > 1 ? `
+                        <div class="thumbnail-container">
+                            ${images.map((img, index) => `
+                                <img src="${img}" 
+                                     class="product-thumbnail ${index === 0 ? 'active' : ''}" 
+                                     alt="Product view ${index + 1}"
+                                     onclick="changeMainImage('${img}', ${index})"
+                                     onerror="this.src='${basePath}placeholder.jpg'">
+                            `).join('')}
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="product-info">
+                            <span class="product-category">
+                                <i class="bi bi-tag"></i> ${product.mainCategory || product.category || 'Uncategorized'}
+                                ${product.subCategory ? ` / ${product.subCategory}` : ''}
                             </span>
-                        </div>
-                        
-                        <p class="mb-4">${product.description}</p>
-                        
-                        <div class="mb-4">
-                            <h6>Quantity</h6>
-                            <div class="quantity-selector">
-                                <button class="quantity-btn" onclick="updateQuantity(-1)">−</button>
-                                <input type="text" class="quantity-input" id="quantity" value="1" readonly>
-                                <button class="quantity-btn" onclick="updateQuantity(1)">+</button>
-                            </div>
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-warning btn-lg" 
-                                    onclick="addToCart(${product.id})"
-                                    ${product.stock < 1 ? 'disabled' : ''}>
-                                <i class="bi bi-cart-plus"></i> 
-                                ${product.stock < 1 ? 'Out of Stock' : 'Add to Cart'}
-                            </button>
                             
-                            <a href="products.html" class="btn btn-outline-secondary back-btn">
-                                <i class="bi bi-arrow-left"></i> Continue Shopping
-                            </a>
+                            <h1 class="fw-bold mb-3">${escapeHtml(product.name)}</h1>
+                            
+                            <div class="product-price mb-3">
+                                ${product.originalPrice ? `<span class="original-price" style="text-decoration: line-through; color: #999; font-size: 1.2rem; margin-right: 10px;">Ksh ${product.originalPrice.toLocaleString()}</span>` : ''}
+                                Ksh ${Number(product.price).toLocaleString()}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <span class="stock-badge ${stockClass}">
+                                    <i class="bi ${product.stock > 0 ? 'bi-check-circle' : 'bi-x-circle'}"></i> 
+                                    ${stockStatus}
+                                </span>
+                            </div>
+                            
+                            <p class="mb-4">${product.description || 'No description available.'}</p>
+                            
+                            ${colorsHtml}
+                            
+                            <div class="mb-4">
+                                <h6>Quantity</h6>
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn" onclick="updateQuantity(-1)">−</button>
+                                    <input type="text" class="quantity-input" id="quantity" value="1" readonly>
+                                    <button class="quantity-btn" onclick="updateQuantity(1)">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-dark btn-lg" 
+                                        onclick="addToCart(${product.id})"
+                                        ${product.stock < 1 ? 'disabled' : ''}>
+                                    <i class="bi bi-cart-plus"></i> 
+                                    ${product.stock < 1 ? 'Out of Stock' : 'Add to Cart'}
+                                </button>
+                                
+                                <a href="products.html" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i> Continue Shopping
+                                </a>
+                            </div>
+                            
+                            <!-- Product Meta -->
+                            <div class="mt-4 pt-4 border-top">
+                                <p class="small text-muted mb-1">
+                                    <i class="bi bi-upc-scan"></i> Product ID: VE-${product.id.toString().padStart(4, '0')}
+                                </p>
+                                <p class="small text-muted mb-1">
+                                    <i class="bi bi-truck"></i> Free delivery on orders over Ksh 5,000
+                                </p>
+                                <p class="small text-muted">
+                                    <i class="bi bi-arrow-return-left"></i> 7-day return policy
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
+            
+            document.getElementById('productContainer').innerHTML = html;
+        }
 
-        let currentQuantity = 1;
+        function changeMainImage(src, index) {
+            document.getElementById('mainImage').src = src;
+            
+            document.querySelectorAll('.product-thumbnail').forEach((thumb, i) => {
+                if (i === index) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+
+        function openZoom(src) {
+            document.getElementById('zoomImage').src = src;
+            document.getElementById('zoomModal').classList.add('active');
+        }
+
+        function closeZoom() {
+            document.getElementById('zoomModal').classList.remove('active');
+        }
 
         function updateQuantity(change) {
             const input = document.getElementById('quantity');
             currentQuantity = parseInt(input.value) + change;
             
             if (currentQuantity < 1) currentQuantity = 1;
-            if (currentQuantity > product.stock) currentQuantity = product.stock;
+            
+            // Get product to check max stock
+            const product = products.find(p => p.id === productId);
+            if (product && currentQuantity > product.stock) {
+                currentQuantity = product.stock;
+            }
             
             input.value = currentQuantity;
         }
 
-        function addToCart(id) {
-            const product = products[id];
+        function selectColor(element, colorName) {
+            // Remove selected class from all color dots
+            document.querySelectorAll('.color-dot').forEach(dot => {
+                dot.classList.remove('selected');
+            });
+            // Add selected class to clicked dot
+            element.classList.add('selected');
+            selectedColor = colorName;
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
             const quantity = parseInt(document.getElementById('quantity').value);
+            
+            if (!product) return;
             
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             
@@ -353,7 +417,9 @@
                 cart.push({
                     id: product.id,
                     name: product.name,
-                    price: product.price
+                    price: product.price,
+                    color: selectedColor,
+                    image: product.images ? product.images[0] : product.image
                 });
             }
             
@@ -371,24 +437,36 @@
             });
         }
 
-        // Load navbar and footer
-        fetch('navbar.html')
-            .then(r => r.text())
-            .then(d => {
-                document.getElementById('navbar').innerHTML = d;
-                updateCartCount();
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
             });
-            
-        fetch('footer.html')
-            .then(r => r.text())
-            .then(d => document.getElementById('footer').innerHTML = d);
+        }
+
+        function loadNavbar() {
+            fetch('navbar.html')
+                .then(r => r.text())
+                .then(d => document.getElementById('navbar').innerHTML = d)
+                .catch(e => console.log('Navbar error:', e));
+        }
+
+        function loadFooter() {
+            fetch('footer.html')
+                .then(r => r.text())
+                .then(d => document.getElementById('footer').innerHTML = d)
+                .catch(e => console.log('Footer error:', e));
+        }
+
+        // Keyboard shortcut to close zoom (ESC key)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeZoom();
+            }
+        });
     </script>
-    <script>
-    function handleLogout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = 'index.html';
-    }
-</script>
 </body>
 </html>
