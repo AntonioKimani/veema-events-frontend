@@ -230,7 +230,6 @@
                 }
             } else {
                 products = defaultProducts;
-                // Save to localStorage for future use
                 localStorage.setItem('products', JSON.stringify(products));
             }
         } catch (e) {
@@ -381,15 +380,16 @@
                                 </a>
                             </div>
                             
+                            <!-- Updated Policy Section - Free Delivery Removed, Return Policy Updated -->
                             <div class="mt-4 pt-4 border-top">
                                 <p class="small text-muted mb-1">
                                     <i class="bi bi-upc-scan"></i> Product ID: VE-${product.id.toString().padStart(4, '0')}
                                 </p>
                                 <p class="small text-muted mb-1">
-                                    <i class="bi bi-truck"></i> Free delivery on orders over Ksh 5,000
+                                    <i class="bi bi-shield-exclamation"></i> Goods once sold cannot be returned
                                 </p>
-                                <p class="small text-muted">
-                                    <i class="bi bi-arrow-return-left"></i> 7-day return policy
+                                <p class="small text-muted mb-1">
+                                    <i class="bi bi-cash-stack"></i> Payment: M-Pesa / Bank Transfer
                                 </p>
                             </div>
                         </div>
