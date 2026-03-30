@@ -4,6 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Veema Events</title>
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1307602061219417');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1307602061219417&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -124,14 +143,6 @@
             height: 1rem;
             margin-right: 8px;
         }
-        .forgot-password {
-            font-size: 0.85rem;
-            color: #C6A86A;
-            text-decoration: none;
-        }
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
         .register-link {
             text-align: center;
             margin-top: 20px;
@@ -174,9 +185,6 @@
                                 <label class="form-label fw-bold">Password</label>
                                 <input type="password" class="form-control" id="password" 
                                        placeholder="Enter your password" required>
-                                <div class="text-end mt-2">
-                                    <a href="forgot-password.html" class="forgot-password">Forgot password?</a>
-                                </div>
                             </div>
                             <button type="submit" class="btn btn-login w-100" id="loginBtn">
                                 <span id="loginText">Login</span>
@@ -205,15 +213,11 @@
 
     <div id="footer"></div>
 
-    <!-- Firebase SDKs -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // ============================================
-        // FIREBASE CONFIGURATION
-        // ============================================
         const firebaseConfig = {
             apiKey: "AIzaSyA0D7OnPSrkF0fFrcdQnYpTJGIyGjUNlWU",
             authDomain: "veema-events.firebaseapp.com",
@@ -223,22 +227,14 @@
             appId: "1:933547953857:web:84fe2d92fb721763508e40"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-
-        // Backend URL
         const BACKEND_URL = window.ENV?.BACKEND_URL || 'https://veema-events-backend.railway.app';
 
-        // ============================================
-        // CHECK IF USER IS ALREADY LOGGED IN
-        // ============================================
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 const token = await user.getIdToken();
-                
                 try {
-                    // Check admin status from backend
                     const response = await fetch(`${BACKEND_URL}/api/auth/is-admin`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
@@ -250,39 +246,28 @@
                         window.location.href = 'index.html';
                     }
                 } catch (error) {
-                    console.error('Error checking admin status:', error);
                     window.location.href = 'index.html';
                 }
             }
         });
 
-        // ============================================
-        // EMAIL/PASSWORD LOGIN
-        // ============================================
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMessage');
-            const successDiv = document.getElementById('successMessage');
             const loginBtn = document.getElementById('loginBtn');
             const loginText = document.getElementById('loginText');
             const loginSpinner = document.getElementById('loginSpinner');
             
-            // Hide previous messages
             errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
-            
-            // Show loading state
             loginText.style.display = 'none';
             loginSpinner.style.display = 'inline-block';
             loginBtn.disabled = true;
             
             try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                // Success - redirect handled by onAuthStateChanged
-                console.log('Login successful:', userCredential.user.email);
+                await auth.signInWithEmailAndPassword(email, password);
             } catch (error) {
                 let errorMessage = 'Login failed. ';
                 switch (error.code) {
@@ -298,9 +283,6 @@
                     case 'auth/too-many-requests':
                         errorMessage = 'Too many failed attempts. Please try again later.';
                         break;
-                    case 'auth/user-disabled':
-                        errorMessage = 'This account has been disabled.';
-                        break;
                     default:
                         errorMessage = error.message;
                 }
@@ -312,9 +294,6 @@
             }
         });
 
-        // ============================================
-        // GOOGLE LOGIN
-        // ============================================
         document.getElementById('googleLoginBtn').addEventListener('click', async function() {
             const provider = new firebase.auth.GoogleAuthProvider();
             const errorDiv = document.getElementById('errorMessage');
@@ -325,19 +304,14 @@
             
             try {
                 await auth.signInWithPopup(provider);
-                // Success - redirect handled by onAuthStateChanged
             } catch (error) {
-                console.error('Google login error:', error);
                 let errorMessage = 'Google login failed. ';
-                switch (error.code) {
-                    case 'auth/popup-closed-by-user':
-                        errorMessage = 'Login popup was closed. Please try again.';
-                        break;
-                    case 'auth/network-request-failed':
-                        errorMessage = 'Network error. Please check your connection.';
-                        break;
-                    default:
-                        errorMessage = error.message;
+                if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage = 'Login popup was closed. Please try again.';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage = 'Network error. Please check your connection.';
+                } else {
+                    errorMessage = error.message;
                 }
                 errorDiv.textContent = errorMessage;
                 errorDiv.style.display = 'block';
@@ -346,9 +320,6 @@
             }
         });
 
-        // ============================================
-        // LOAD NAVBAR AND FOOTER
-        // ============================================
         function loadNavbar() {
             fetch('navbar.html')
                 .then(r => r.text())

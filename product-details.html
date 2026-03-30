@@ -4,6 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details - Veema Events</title>
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1307602061219417');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1307602061219417&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -191,32 +210,22 @@
     <script>
         const basePath = '/assets/images/';
         
-        // ============================================
-        // COMPLETE PRODUCT DATABASE (FALLBACK)
-        // ============================================
+        // Complete product database
         const defaultProducts = [
-            // Chair Covers & Decor
-            { id: 1, name: "Light Seat Spandex", originalPrice: 450, price: 350, mainCategory: "Chair Covers & Decor", subCategory: "Light Seat Spandex", images: [basePath + "spandex-cover.jpeg"], stock: 100, featured: true, description: "Light weight spandex seat cover. Perfect for weddings and events. Easy to fit and remove.", colors: [{name:"White",value:"#FFFFFF"},{name:"Black",value:"#000000"},{name:"Gold",value:"#C6A86A"}] },
-            { id: 2, name: "Heavy Seat Spandex", originalPrice: 550, price: 450, mainCategory: "Chair Covers & Decor", subCategory: "Heavy Seat Spandex", images: [basePath + "spandex-cover.jpeg"], stock: 80, featured: true, description: "Heavy duty spandex seat cover. Premium quality, durable material.", colors: [{name:"White",value:"#FFFFFF"},{name:"Black",value:"#000000"}] },
-            { id: 3, name: "Tie Backs", originalPrice: 120, price: 80, mainCategory: "Chair Covers & Decor", subCategory: "Tie Backs", images: [basePath + "tie-backs.jpeg"], stock: 200, featured: false, description: "Decorative tie backs for chair covers. Set of 10 pieces.", colors: [{name:"Gold",value:"#C6A86A"},{name:"Silver",value:"#C0C0C0"}] },
-            
-            // Table Covers & Linens
-            { id: 4, name: "Jacquard Round Table Cloth - Gold", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth", images: [basePath + "tablecloth-gold.jpg"], stock: 25, featured: true, description: "Premium gold jacquard table cloth. Elegant design for formal events." },
-            { id: 5, name: "Jacquard Round Table Cloth - White", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth", images: [basePath + "tablecloth-white.jpg"], stock: 30, featured: true, description: "Elegant white jacquard table cloth. Classic look for weddings." },
-            { id: 6, name: "Cheese Runner", originalPrice: 550, price: 450, mainCategory: "Table Covers & Linens", subCategory: "Cheese Runner", images: [basePath + "cheese-runner.jpeg"], stock: 40, featured: true, description: "Cheese pattern table runner. Unique rustic design." },
-            { id: 7, name: "Sequin Runner", originalPrice: 1500, price: 1200, mainCategory: "Table Covers & Linens", subCategory: "Sequin Runner", images: [basePath + "runner-sequin.jpg"], stock: 20, featured: true, description: "Sparkling sequin table runner. Adds glamour to any table." },
-            
-            // Tableware & Dining Accessories
-            { id: 8, name: "Gold Charger Plate", originalPrice: 600, price: 450, mainCategory: "Tableware & Dining Accessories", subCategory: "Charger Plates", images: [basePath + "charger-gold.jpg"], stock: 200, featured: true, description: "Elegant gold charger plate. Set of 6. Perfect for formal dining." },
-            { id: 9, name: "Gold Spiral Napkin Ring", originalPrice: 150, price: 100, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-gold-spiral.jpeg"], stock: 150, featured: true, description: "Gold spiral design napkin rings. Set of 6 pieces." },
-            { id: 10, name: "Pearl Napkin Rings", originalPrice: 200, price: 150, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-pearl.jpeg"], stock: 120, featured: false, description: "Pearl embellished napkin rings. Set of 6 pieces." },
-            
-            // Decorations & Styling
-            { id: 11, name: "Sage Green Balloons", originalPrice: 300, price: 250, mainCategory: "Decorations & Styling", subCategory: "Balloons", images: [basePath + "balloons-sage.jpeg"], stock: 50, featured: true, description: "Pack of 100 sage green balloons. Perfect for weddings and events." },
-            { id: 12, name: "Crystal Centerpiece", originalPrice: 3000, price: 2500, mainCategory: "Decorations & Styling", subCategory: "Center Pieces", images: [basePath + "centerpiece-crystal.jpg"], stock: 15, featured: true, description: "Beautiful crystal centerpiece with LED lights. Height: 25cm." }
+            { id: 1, name: "Light Seat Spandex", originalPrice: 450, price: 350, mainCategory: "Chair Covers & Decor", subCategory: "Light Seat Spandex", images: [basePath + "spandex-cover.jpeg"], stock: 100, featured: true, description: "Light weight spandex seat cover", colors: [{name:"White",value:"#FFFFFF"},{name:"Black",value:"#000000"},{name:"Gold",value:"#C6A86A"}] },
+            { id: 2, name: "Heavy Seat Spandex", originalPrice: 550, price: 450, mainCategory: "Chair Covers & Decor", subCategory: "Heavy Seat Spandex", images: [basePath + "spandex-cover.jpeg"], stock: 80, featured: true, description: "Heavy duty spandex seat cover", colors: [{name:"White",value:"#FFFFFF"},{name:"Black",value:"#000000"}] },
+            { id: 3, name: "Tie Backs", originalPrice: 120, price: 80, mainCategory: "Chair Covers & Decor", subCategory: "Tie Backs", images: [basePath + "tie-backs.jpeg"], stock: 200, featured: false, description: "Decorative tie backs" },
+            { id: 4, name: "Jacquard Round Table Cloth - Gold", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth", images: [basePath + "tablecloth-gold.jpg"], stock: 25, featured: true, description: "Premium gold jacquard table cloth" },
+            { id: 5, name: "Jacquard Round Table Cloth - White", originalPrice: 4500, price: 3500, mainCategory: "Table Covers & Linens", subCategory: "Jacquard Round Table Cloth", images: [basePath + "tablecloth-white.jpg"], stock: 30, featured: true, description: "Elegant white jacquard table cloth" },
+            { id: 6, name: "Cheese Runner", originalPrice: 550, price: 450, mainCategory: "Table Covers & Linens", subCategory: "Cheese Runner", images: [basePath + "cheese-runner.jpeg"], stock: 40, featured: true, description: "Cheese pattern table runner" },
+            { id: 7, name: "Sequin Runner", originalPrice: 1500, price: 1200, mainCategory: "Table Covers & Linens", subCategory: "Sequin Runner", images: [basePath + "runner-sequin.jpg"], stock: 20, featured: true, description: "Sparkling sequin table runner" },
+            { id: 8, name: "Gold Charger Plate", originalPrice: 600, price: 450, mainCategory: "Tableware & Dining Accessories", subCategory: "Charger Plates", images: [basePath + "charger-gold.jpg"], stock: 200, featured: true, description: "Elegant gold charger plate" },
+            { id: 9, name: "Gold Spiral Napkin Ring", originalPrice: 150, price: 100, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-gold-spiral.jpeg"], stock: 150, featured: true, description: "Gold spiral design napkin rings" },
+            { id: 10, name: "Pearl Napkin Rings", originalPrice: 200, price: 150, mainCategory: "Tableware & Dining Accessories", subCategory: "Napkin Rings", images: [basePath + "napring-pearl.jpeg"], stock: 120, featured: false, description: "Pearl embellished napkin rings" },
+            { id: 11, name: "Sage Green Balloons", originalPrice: 300, price: 250, mainCategory: "Decorations & Styling", subCategory: "Balloons", images: [basePath + "balloons-sage.jpeg"], stock: 50, featured: true, description: "Pack of 100 sage green balloons" },
+            { id: 12, name: "Crystal Centerpiece", originalPrice: 3000, price: 2500, mainCategory: "Decorations & Styling", subCategory: "Center Pieces", images: [basePath + "centerpiece-crystal.jpg"], stock: 15, featured: true, description: "Beautiful crystal centerpiece" }
         ];
 
-        // Try to load from localStorage, fallback to defaults
         let products = [];
         
         try {
@@ -233,11 +242,9 @@
                 localStorage.setItem('products', JSON.stringify(products));
             }
         } catch (e) {
-            console.error('Error loading products:', e);
             products = defaultProducts;
         }
 
-        // Get product ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const productId = parseInt(urlParams.get('id'));
 
@@ -277,10 +284,8 @@
         }
 
         function displayProduct(product) {
-            // Get images - handle both single image and multiple images array
             const images = (product.images && product.images.length) ? product.images : [product.image || basePath + 'placeholder.jpg'];
             
-            // Determine stock status
             let stockStatus = '';
             let stockClass = '';
             if (product.stock > 10) {
@@ -294,7 +299,6 @@
                 stockClass = 'out-of-stock';
             }
             
-            // Build color dots HTML
             let colorsHtml = '';
             if (product.colors && product.colors.length) {
                 colorsHtml = `
@@ -380,7 +384,6 @@
                                 </a>
                             </div>
                             
-                            <!-- Updated Policy Section - Free Delivery Removed, Return Policy Updated -->
                             <div class="mt-4 pt-4 border-top">
                                 <p class="small text-muted mb-1">
                                     <i class="bi bi-upc-scan"></i> Product ID: VE-${product.id.toString().padStart(4, '0')}
@@ -402,7 +405,6 @@
 
         function changeMainImage(src, index) {
             document.getElementById('mainImage').src = src;
-            
             document.querySelectorAll('.product-thumbnail').forEach((thumb, i) => {
                 if (i === index) {
                     thumb.classList.add('active');
@@ -424,21 +426,16 @@
         function updateQuantity(change) {
             const input = document.getElementById('quantity');
             currentQuantity = parseInt(input.value) + change;
-            
             if (currentQuantity < 1) currentQuantity = 1;
-            
             const product = products.find(p => p.id === productId);
             if (product && currentQuantity > product.stock) {
                 currentQuantity = product.stock;
             }
-            
             input.value = currentQuantity;
         }
 
         function selectColor(element, colorName) {
-            document.querySelectorAll('.color-dot').forEach(dot => {
-                dot.classList.remove('selected');
-            });
+            document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('selected'));
             element.classList.add('selected');
             selectedColor = colorName;
         }
@@ -446,11 +443,9 @@
         function addToCart(productId) {
             const product = products.find(p => p.id === productId);
             const quantity = parseInt(document.getElementById('quantity').value);
-            
             if (!product) return;
             
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            
             for (let i = 0; i < quantity; i++) {
                 cart.push({
                     id: product.id,
@@ -460,9 +455,7 @@
                     image: product.images ? product.images[0] : product.image
                 });
             }
-            
             localStorage.setItem('cart', JSON.stringify(cart));
-            
             alert(`${quantity} × ${product.name} added to cart!`);
             updateCartCount();
         }
@@ -500,9 +493,7 @@
         }
 
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeZoom();
-            }
+            if (e.key === 'Escape') closeZoom();
         });
     </script>
 </body>
