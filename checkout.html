@@ -67,6 +67,27 @@
             border-radius: 10px;
             margin-top: 30px;
         }
+        .guest-notice {
+            background: #e8f4fd;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .login-prompt {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .login-prompt a {
+            color: #C6A86A;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .login-prompt a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -76,13 +97,25 @@
     <div class="container py-5">
         <div class="row">
             <div class="col-md-8 mx-auto">
+                
+                <!-- Guest Checkout Notice -->
+                <div class="guest-notice">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-person-circle fs-3 me-3 text-info"></i>
+                        <div>
+                            <h5 class="fw-bold mb-1">Guest Checkout Available</h5>
+                            <p class="mb-0">You can complete your order without logging in. <a href="login.html" class="text-decoration-none">Login</a> or <a href="register.html" class="text-decoration-none">Register</a> to save your details for future orders.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Payment Notice -->
                 <div class="payment-note mb-4">
                     <div class="d-flex align-items-center">
                         <i class="bi bi-info-circle-fill fs-1 me-3 text-warning"></i>
                         <div>
                             <h5 class="fw-bold mb-2">Complete Your Order</h5>
-                            <p class="mb-0">Review your order and contact us to finalize your purchase.</p>
+                            <p class="mb-0">Review your order and contact us to finalize your purchase via WhatsApp.</p>
                         </div>
                     </div>
                 </div>
@@ -123,24 +156,24 @@
                         <h4 class="mb-4">Your Details</h4>
                         <form id="customerForm">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Full Name</label>
+                                <label class="form-label fw-bold">Full Name *</label>
                                 <input type="text" class="form-control" id="fullName" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Phone Number</label>
+                                <label class="form-label fw-bold">Phone Number *</label>
                                 <input type="tel" class="form-control" id="phone" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Email Address</label>
-                                <input type="email" class="form-control" id="email">
+                                <input type="email" class="form-control" id="email" placeholder="Optional">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Delivery Address</label>
+                                <label class="form-label fw-bold">Delivery Address *</label>
                                 <textarea class="form-control" id="address" rows="3" required></textarea>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Notes (Optional)</label>
-                                <textarea class="form-control" id="notes" rows="2"></textarea>
+                                <textarea class="form-control" id="notes" rows="2" placeholder="Any special instructions?"></textarea>
                             </div>
                         </form>
                     </div>
@@ -203,7 +236,7 @@
                         <i class="bi bi-arrow-left"></i> Back to Cart
                     </a>
                     <button class="btn btn-luxury" onclick="prepareOrderMessage()">
-                        <i class="bi bi-whatsapp"></i> Send Order via WhatsApp
+                        <i class="bi bi-whatsapp"></i> Place Order via WhatsApp
                     </button>
                 </div>
             </div>
@@ -221,27 +254,19 @@
         const BACKEND_URL = window.ENV?.BACKEND_URL || 'https://veema-events-backend.railway.app';
 
         document.addEventListener('DOMContentLoaded', function() {
-            if (!API.isAuthenticated()) {
-                document.querySelector('.container').innerHTML = `
-                    <div class="alert alert-warning text-center p-5">
-                        <i class="bi bi-exclamation-triangle fs-1"></i>
-                        <h4 class="mt-3">Please Login to Continue</h4>
-                        <p>You need to be logged in to complete your order.</p>
-                        <a href="login.html?redirect=checkout.html" class="btn btn-dark">Login Now</a>
-                        <a href="products.html" class="btn btn-outline-dark ms-2">Continue Shopping</a>
-                    </div>
-                `;
-                return;
-            }
-            
-            const user = API.getCurrentUser();
-            if (user) {
-                document.getElementById('fullName').value = user.name || '';
-                document.getElementById('email').value = user.email || '';
-                document.getElementById('phone').value = user.phone || '';
+            // Load user data if logged in (optional)
+            if (API.isAuthenticated()) {
+                const user = API.getCurrentUser();
+                if (user) {
+                    document.getElementById('fullName').value = user.name || '';
+                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('phone').value = user.phone || '';
+                }
             }
             
             loadOrderSummary();
+            loadNavbar();
+            loadFooter();
         });
 
         function loadOrderSummary() {
@@ -273,7 +298,7 @@
                 html += `
                     <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
                         <div>
-                            <strong>${item.name}</strong>
+                            <strong>${escapeHtml(item.name)}</strong>
                             <br>
                             <small class="text-muted">Quantity: ${quantity}</small>
                         </div>
@@ -297,8 +322,21 @@
             const address = document.getElementById('address').value;
             const notes = document.getElementById('notes').value;
             
+            // Validate required fields
             if (!name || !phone || !address) {
-                alert('Please fill in your name, phone and delivery address');
+                alert('Please fill in your name, phone number and delivery address');
+                return;
+            }
+            
+            // Validate phone number format
+            const phoneRegex = /^(07|01)\d{8}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('Please enter a valid phone number (e.g., 0712345678)');
+                return;
+            }
+            
+            if (cart.length === 0) {
+                alert('Your cart is empty');
                 return;
             }
             
@@ -313,19 +351,63 @@
                 itemsList += `• ${item.name} x${quantity} - Ksh ${itemTotal.toLocaleString()}\n`;
             });
             
-            const message = `*NEW ORDER - Veema Events*\n\n` +
-                `*Customer Details:*\n` +
+            // Create WhatsApp message
+            const message = `*🛍️ NEW ORDER - Veema Events*\n\n` +
+                `*👤 Customer Details:*\n` +
                 `Name: ${name}\n` +
                 `Phone: ${phone}\n` +
                 `Email: ${email || 'Not provided'}\n` +
                 `Delivery: ${address}\n` +
                 `${notes ? `Notes: ${notes}\n` : ''}\n` +
-                `*Order Summary:*\n` +
+                `*📦 Order Summary:*\n` +
                 `${itemsList}\n` +
-                `*TOTAL: Ksh ${total.toLocaleString()}*`;
+                `*💰 TOTAL: Ksh ${total.toLocaleString()}*`;
             
+            // Encode and open WhatsApp
             const encodedMessage = encodeURIComponent(message);
             window.open(`https://wa.me/254706675003?text=${encodedMessage}`, '_blank');
+            
+            // Optional: Save order details to localStorage for reference
+            const orderDetails = {
+                orderDate: new Date().toISOString(),
+                customerName: name,
+                customerPhone: phone,
+                customerEmail: email,
+                deliveryAddress: address,
+                notes: notes,
+                items: cart,
+                total: total,
+                status: 'pending'
+            };
+            
+            // Save to order history (optional)
+            let orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+            orderHistory.push(orderDetails);
+            localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function loadNavbar() {
+            fetch('navbar.html')
+                .then(r => r.text())
+                .then(d => document.getElementById('navbar').innerHTML = d)
+                .catch(e => console.log('Navbar error:', e));
+        }
+
+        function loadFooter() {
+            fetch('footer.html')
+                .then(r => r.text())
+                .then(d => document.getElementById('footer').innerHTML = d)
+                .catch(e => console.log('Footer error:', e));
         }
     </script>
 </body>
